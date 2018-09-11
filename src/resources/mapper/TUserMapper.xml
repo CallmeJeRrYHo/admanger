@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjh.dao.TUserDao">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.hjh.entity.TUser">
+		<id column="user_id" property="userId" />
+		<result column="mobile" property="mobile" />
+		<result column="name" property="name" />
+		<result column="portrait_url" property="portraitUrl" />
+		<result column="password" property="password" />
+		<result column="user_type" property="userType" />
+		<result column="company_id" property="companyId" />
+		<result column="superior_id" property="superiorId" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="modify_time" property="modifyTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id AS userId, mobile, name, portrait_url AS portraitUrl, password, user_type AS userType, company_id AS companyId, superior_id AS superiorId, status, create_time AS createTime, modify_time AS modifyTime
+    </sql>
+
+</mapper>

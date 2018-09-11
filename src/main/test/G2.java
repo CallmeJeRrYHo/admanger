@@ -17,10 +17,10 @@ import java.util.Map;
 public class G2 {
 
     //生成文件所在项目路径
-    private static String baseProjectPath = "D:\\workspace\\搬运工平台\\code\\后台\\carrier\\gen";
+    private static String baseProjectPath = "H:\\mybatistPlusGen\\";
 
     //基本包名
-    private static String basePackage = "com.yqh";
+    private static String basePackage = "com.hjh";
     //作者
     private static String authorName = "hjh";
     //要生成的表名
@@ -32,9 +32,9 @@ public class G2 {
 
     //数据库配置四要素
     private static String driverName = "com.mysql.jdbc.Driver";
-    private static String url = "jdbc:mysql://39.108.245.130:3306/carrier?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8";
+    private static String url = "jdbc:mysql://localhost:3306/ad_manger?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8";
     private static String username = "root";
-    private static String password = "yqh@20178888";
+    private static String password = "123456";
 
     public static void main(String[] args) throws Exception {
         AutoGenerator mpg = new AutoGenerator();
@@ -76,7 +76,7 @@ public class G2 {
         //strategy.setFieldNaming(NamingStrategy.underline_to_camel);
         strategy.setDbColumnUnderline(false);
         // lp_test,a_settle_a,a_settle_b,a_settle_c
-        strategy.setInclude(tables); // 需要生成的表
+        //strategy.setInclude(tables); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
