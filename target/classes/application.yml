@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:
+    url: jdbc:mysql://39.108.245.130:3306/carrier?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8mb4
     username: root
-    password:
+    password: yqh@20178888
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     tomcat:
