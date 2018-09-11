@@ -21,6 +21,7 @@ public class TOrder extends Model<TOrder> {
 
     private static final long serialVersionUID = 1L;
 
+
     @TableId("order_id")
 	private String orderId;
     /**
