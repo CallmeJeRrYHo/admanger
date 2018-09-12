@@ -12,5 +12,6 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2018-09-12
  */
 public interface IAdWarningService extends IService<AdWarning> {
-	
+
+    String sendWarning(String advertisementId, String userId, String content, String pics);
 }

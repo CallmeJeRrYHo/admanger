@@ -26,7 +26,7 @@ public class G2 {
     //要生成的表名
 //    private static String[] tables = {"t_order","attachment","order_append","partner","sys_authority","sys_file","sys_msg," +
 //            "sys_price_rule","sys_role","sys_role_auth","t_user","team","user_bank_card","user_flowlog","user_wallet","company"};
-    private static String[] tables = {"t_order"};
+    private static String[] tables = {"company"};
     //table前缀
     private static String prefix = "t_";
 
@@ -76,7 +76,7 @@ public class G2 {
         //strategy.setFieldNaming(NamingStrategy.underline_to_camel);
         strategy.setDbColumnUnderline(false);
         // lp_test,a_settle_a,a_settle_b,a_settle_c
-        //strategy.setInclude(tables); // 需要生成的表
+        strategy.setInclude(tables); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");

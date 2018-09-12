@@ -12,5 +12,11 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2018-09-12
  */
 public interface ITUserService extends IService<TUser> {
-	
+
+    String login(String account, String password);
+
+
+    String updateUserInfo(String userId, String userName, String path);
+
+    String changePassword(String userId, String oldPassword, String newPassword);
 }

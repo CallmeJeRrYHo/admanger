@@ -1,5 +1,6 @@
 package com.hjh.entity;
 
+import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
@@ -24,6 +25,11 @@ public class Company extends Model<Company> {
      */
 	@TableField("company_name")
 	private String companyName;
+	private Integer status;
+	@TableField("create_time")
+	private Date createTime;
+	@TableField("modify_time")
+	private Date modifyTime;
 
 
 	public String getCompanyId() {
@@ -40,6 +46,30 @@ public class Company extends Model<Company> {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
 	@Override

@@ -12,5 +12,8 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2018-09-12
  */
 public interface IAdvertisementService extends IService<Advertisement> {
-	
+
+    String selectMyAd(String userId, Integer adType, Integer adSpec, Integer index, Integer pageSize);
+
+    String deleteAd(String userId, String advertisementId);
 }
