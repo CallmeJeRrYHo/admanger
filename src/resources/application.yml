@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:
+    url: jdbc:mysql://localhost:3306/ad_manger?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8
     username: root
-    password:
+    password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     tomcat:
@@ -22,4 +22,4 @@ logging:
      hjh:
       dao: debug
 server:
-  port: 8094
+  port: 9090

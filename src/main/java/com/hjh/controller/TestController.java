@@ -1,9 +1,9 @@
 package com.hjh.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.hjh.dao.TOrderDao;
-import com.hjh.entity.TOrder;
-import com.hjh.service.ITOrderService;
+import com.hjh.dao.TUserDao;
+import com.hjh.entity.TUser;
+import com.yqh.util.common.ResultInfoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,12 +19,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/aaa")
 public class TestController {
+
     @Autowired
-    private TOrderDao tOrderDao;
+    TUserDao tUserDao;
     @ResponseBody
     @RequestMapping("/test")
     public String  test(){
         //List<TOrder> tOrders = tOrderDao.selectList(new EntityWrapper<TOrder>());
-        return "21fdgsdgdsfs";
+        List<TUser> tUsers = tUserDao.selectList(new EntityWrapper<TUser>());
+        return ResultInfoUtils.infoData(tUsers);
     }
 }
