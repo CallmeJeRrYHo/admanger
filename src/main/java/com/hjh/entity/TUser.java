@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -50,6 +52,7 @@ public class TUser extends Model<TUser> {
     /**
      * 公司企业id 
      */
+	@JsonProperty(value = "company_id")
 	@TableField("company_id")
 	private String companyId;
     /**

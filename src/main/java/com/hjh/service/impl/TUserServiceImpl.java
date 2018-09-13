@@ -11,6 +11,8 @@ import com.yqh.util.common.YqhException;
 import com.yqh.util.common.enums.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -53,6 +55,7 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
     public String changePassword(String userId, String oldPassword, String newPassword) {
         TUser tUser = new TUser();
         tUser.setUserId(userId);

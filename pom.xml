@@ -73,11 +73,14 @@
             <artifactId>druid</artifactId>
             <version>1.1.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.yqh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.1.9</version>
+            <version>1.1.8</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
