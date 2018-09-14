@@ -1,7 +1,13 @@
 package com.hjh.dao;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.entity.AdWarning;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.hjh.entity.AdWarningWithPic;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +19,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface AdWarningDao extends BaseMapper<AdWarning> {
 
+
+    List<AdWarningWithPic> selectMyWarning(Page<AdWarningWithPic> page, @Param("userId") String userId);
+    long selectMyWarningCount(@Param("userId") String userId);
+
+    AdWarningWithPic getWarningDetail(@Param("warningId")String warningId);
 }

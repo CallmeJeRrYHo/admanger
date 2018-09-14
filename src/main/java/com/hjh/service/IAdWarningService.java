@@ -14,4 +14,8 @@ import com.baomidou.mybatisplus.service.IService;
 public interface IAdWarningService extends IService<AdWarning> {
 
     String sendWarning(String advertisementId, String userId, String content, String pics);
+
+    String handleWarning(String content, String userId, String warningId);
+
+    String auditWarningHandle(String userId, String warningId, Integer auditStatus);
 }

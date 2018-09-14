@@ -2,22 +2,104 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjh.dao.AdWarningDao">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.hjh.entity.AdWarning">
-		<id column="warning_id" property="warningId" />
-		<result column="user_id" property="userId" />
-		<result column="content" property="content" />
-		<result column="advertisememt_id" property="advertisememtId" />
-		<result column="title" property="title" />
-		<result column="warning_status" property="warningStatus" />
-		<result column="status" property="status" />
-		<result column="create_time" property="createTime" />
-		<result column="modify_time" property="modifyTime" />
-	</resultMap>
-
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hjh.entity.AdWarning">
+        <id column="warning_id" property="warningId"/>
+        <result column="user_id" property="userId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="content" property="content"/>
+        <result column="advertisememt_id" property="advertisememtId"/>
+        <result column="title" property="title"/>
+        <result column="warning_status" property="warningStatus"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+    <resultMap id="WarningDetail" type="com.hjh.entity.AdWarningWithPic">
+        <id column="warning_id" property="warningId"/>
+        <result column="user_id" property="userId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="content" property="content"/>
+        <result column="advertisememt_id" property="advertisememtId"/>
+        <result column="title" property="title"/>
+        <result column="warning_status" property="warningStatus"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="company_name" property="companyName"/>
+        <result column="serial_num" property="serialNum"/>
+        <result column="address" property="address"/>
+        <result column="create_user_name" property="createUserName"/>
+        <collection property="picFiles" ofType="com.hjh.entity.PicFile">
+            <id column="pic_id" property="picId"/>
+            <result column="path" property="path"/>
+        </collection>
+    </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        warning_id AS warningId, user_id AS userId, content, advertisememt_id AS advertisememtId, title, warning_status AS warningStatus, status, create_time AS createTime, modify_time AS modifyTime
+        warning_id AS warningId, user_id AS userId, company_id AS companyId, content, advertisememt_id AS advertisememtId, title, warning_status AS warningStatus, status, create_time AS createTime, modify_time AS modifyTime
     </sql>
 
+    <select id="selectMyWarning" resultMap="WarningDetail">
+
+        SELECT
+        aw.*, c.company_name,
+        u.`name` as create_user_name,
+        ad.serial_num,
+        ad.address
+        FROM
+        ad_warning aw
+        LEFT JOIN company c ON aw.company_id = c.company_id
+        LEFT JOIN t_user u ON u.user_id = aw.user_id
+        LEFT JOIN advertisement ad ON ad.advertisement_id=aw.advertisememt_id
+        <where>
+            <if test="userId !=null and userId != ''">
+                aw.user_id = #{userId}
+                OR (u.superior_id = #{userId})
+            </if>
+            and aw.`status`=1
+        </where>
+        order by aw.create_time desc
+    </select>
+
+    <select id="selectMyWarningCount" resultType="Long">
+
+        SELECT
+        COUNT(*)
+        FROM
+        ad_warning aw
+        LEFT JOIN company c ON aw.company_id = c.company_id
+        LEFT JOIN t_user u ON u.user_id = aw.user_id
+        <where>
+            <if test="userId !=null and userId != ''">
+                aw.user_id = #{userId}
+                OR (u.superior_id = #{userId})
+            </if>
+            and aw.`status`=1
+        </where>
+    </select>
+
+    <select id="getWarningDetail" resultMap="WarningDetail">
+        SELECT
+        ad.serial_num,
+        ad.address,
+        c.company_name,
+        u.`name`,
+        pf.pic_id,
+        pf.path,
+        aw.*
+        FROM
+        ad_warning aw
+        LEFT JOIN t_user u ON u.user_id = aw.user_id
+        LEFT JOIN company c ON c.company_id=aw.company_id
+        LEFT JOIN advertisement ad on aw.advertisememt_id=ad.advertisement_id
+        LEFT JOIN pic_file pf ON (aw.warning_id = pf.busness_id AND pf.type=4 AND pf.`status`=1)
+
+        <where>
+            <if test="warningId!=null and warningId!=''">
+                AND aw.warning_id = #{warningId}
+
+            </if>
+        </where>
+    </select>
 </mapper>

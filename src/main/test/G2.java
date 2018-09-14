@@ -17,7 +17,7 @@ import java.util.Map;
 public class G2 {
 
     //生成文件所在项目路径
-    private static String baseProjectPath = "H:\\mybatistPlusGen\\";
+    private static String baseProjectPath = "d:\\mybatistPlusGen\\";
 
     //基本包名
     private static String basePackage = "com.hjh";
@@ -26,15 +26,15 @@ public class G2 {
     //要生成的表名
 //    private static String[] tables = {"t_order","attachment","order_append","partner","sys_authority","sys_file","sys_msg," +
 //            "sys_price_rule","sys_role","sys_role_auth","t_user","team","user_bank_card","user_flowlog","user_wallet","company"};
-    private static String[] tables = {"company"};
+    private static String[] tables = {"ad_warning"};
     //table前缀
     private static String prefix = "t_";
 
     //数据库配置四要素
     private static String driverName = "com.mysql.jdbc.Driver";
-    private static String url = "jdbc:mysql://localhost:3306/ad_manger?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8";
+    private static String url = "jdbc:mysql://39.108.245.130:3306/xad?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=utf8";
     private static String username = "root";
-    private static String password = "123456";
+    private static String password = "yqh@20178888";
 
     public static void main(String[] args) throws Exception {
         AutoGenerator mpg = new AutoGenerator();
