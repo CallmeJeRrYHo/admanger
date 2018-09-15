@@ -12,5 +12,8 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2018-09-12
  */
 public interface ICompanyService extends IService<Company> {
-	
+
+    String addCompany(String userId, String companyName);
+
+    String updateCompany(String userId, String companyId, String companyName);
 }

@@ -1,6 +1,11 @@
 package com.hjh.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.hjh.dao.CompanyDao;
 import com.hjh.dao.TUserDao;
+import com.hjh.entity.Company;
+import com.hjh.service.ICompanyService;
 import com.hjh.service.ITUserService;
 import com.yqh.util.common.BaseController;
 import com.yqh.util.common.ResultInfoUtils;
@@ -9,6 +14,7 @@ import com.yqh.util.common.enums.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -26,6 +32,10 @@ public class UserController extends BaseController {
     ITUserService itUserService;
     @Autowired
     TUserDao tUserDao;
+    @Autowired
+    ICompanyService iCompanyService;
+    @Autowired
+    CompanyDao companyDao;
     @RequestMapping("/login")
     @ResponseBody
     public String login(String account,String password){
@@ -75,6 +85,42 @@ public class UserController extends BaseController {
             checkNecessaryParameter("oldPassword",oldPassword);
             checkNecessaryParameter("newPassword",newPassword);
             return itUserService.changePassword(userId,oldPassword,newPassword);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+
+    @RequestMapping("/addCompany")
+    @ResponseBody
+    public String addCompany(String userId,String companyName){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("companyName",companyName);
+            return iCompanyService.addCompany(userId,companyName);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+
+    @RequestMapping("/selectCompany")
+    @ResponseBody
+    public String selectCompany(@RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
+        try{
+            Company company = new Company();
+            Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), new EntityWrapper<Company>().eq("status", 1));
+            return ResultInfoUtils.infoData(status.getRecords(),status.getTotal());
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+    @RequestMapping("/updateCompany")
+    @ResponseBody
+    public String updateCompany(String userId,String companyId,String companyName){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("companyName",companyName);
+            checkNecessaryParameter("companyId",companyId);
+            return iCompanyService.updateCompany(userId,companyId,companyName);
         }catch(Exception e){
             return handleError(e);
         }

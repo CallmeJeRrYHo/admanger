@@ -84,7 +84,7 @@
         ad.serial_num,
         ad.address,
         c.company_name,
-        u.`name`,
+        u.`name` as create_user_name,
         pf.pic_id,
         pf.path,
         aw.*
