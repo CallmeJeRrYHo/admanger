@@ -2,6 +2,7 @@ package com.hjh.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.hjh.constant.Constant;
 import com.hjh.dao.CompanyDao;
 import com.hjh.dao.TUserDao;
 import com.hjh.entity.Company;
@@ -110,7 +111,7 @@ public class UserController extends BaseController {
         try{
             Company company = new Company();
             Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), new EntityWrapper<Company>()
-                    .eq("status", 1)
+                    .eq("status", Constant.STATUS_NORMAL)
                     .orderBy("create_time",false));
             return ResultInfoUtils.infoData(status.getRecords(),status.getTotal());
         }catch(Exception e){

@@ -2,6 +2,7 @@ package com.hjh.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.hjh.constant.Constant;
 import com.hjh.entity.Advertisement;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.entity.MyAd;
@@ -48,8 +49,11 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         Advertisement advertisement=new Advertisement();
         advertisement.setUserId(userId);
         advertisement.setAdvertisementId(advertisementId);
-        advertisement.setStatus(-1);
-        Integer update = advertisementDao.update(advertisement, new EntityWrapper<Advertisement>().eq("user_id", userId).eq("advertisement_id", advertisementId).eq("status", 1));
+        advertisement.setStatus(Constant.STATUS_DELETE);
+        Integer update = advertisementDao.update(advertisement, new EntityWrapper<Advertisement>()
+                .eq("user_id", userId)
+                .eq("advertisement_id", advertisementId)
+                .eq("status", Constant.STATUS_NORMAL));
         if (update<1){
             throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"删除错误");
         }
@@ -75,8 +79,8 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdSpec(adSpec);
         advertisement.setHasLeaderPortrait(hasLeaderPortrait);
         advertisement.setAdContent(adContent);
-        advertisement.setAdStatus(1);
-        advertisement.setStatus(1);
+        advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT);
+        advertisement.setStatus(Constant.STATUS_NORMAL);
         advertisement.insert();
         JSONArray jsonArray=JSONArray.fromObject(pic);
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -84,11 +88,12 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             PicFile picFile=new PicFile();
             picFile.setPicId(jsonObject.getString("pic_id"));
             picFile.setPath(jsonObject.getString("path"));
-            picFile.setType(2);
+            picFile.setType(Constant.PIC_DESIGN_PIC);
+            picFile.setStatus(Constant.STATUS_NORMAL);
             picFile.setBusnessId(id);
             picFile.insert();
         }
-        return ResultInfoUtils.infoData();
+        return ResultInfoUtils.infoData(id);
     }
 
     /**
@@ -109,14 +114,14 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdvertisementId(advertisementId);
         advertisement=advertisement.selectById();
         Integer adStatus = advertisement.getAdStatus();
-        if (1!= adStatus&&2!=adStatus) {
+        if (Constant.AD_STATUS_WAIT_AUDIT!= adStatus&&Constant.AD_STATUS_DESIGN_NOT_PASS!=adStatus) {
             throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"订单状态有误");
         }
         if (1==auditStatus){
-            advertisement.setAdStatus(3);
+            advertisement.setAdStatus(Constant.AD_STATUS_DESIGN_PASS);
         }else if (2==auditStatus){
             advertisement.setAuditResponse(auditResponse);
-            advertisement.setAdStatus(2);
+            advertisement.setAdStatus(Constant.AD_STATUS_DESIGN_NOT_PASS);
         }
         advertisement.updateById();
         return ResultInfoUtils.infoData();
@@ -128,7 +133,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         checkAdIsBelongUser(userId,advertisementId);
         Advertisement advertisement=new Advertisement();
         advertisement.setAdvertisementId(advertisementId);
-        advertisement.setAdStatus(4);
+        advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT_LIVE_VIEW);
         advertisement.updateById();
         JSONArray jsonArray=JSONArray.fromObject(pic);
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -136,7 +141,8 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             PicFile picFile=new PicFile();
             picFile.setPicId(jsonObject.getString("pic_id"));
             picFile.setPath(jsonObject.getString("path"));
-            picFile.setType(3);
+            picFile.setType(Constant.PIC_LIVE_VIEW_PIC);
+            picFile.setStatus(Constant.STATUS_NORMAL);
             picFile.setBusnessId(advertisementId);
             picFile.insert();
         }
@@ -146,8 +152,8 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
     private void checkAdIsBelongUser(String userId, String advertisementId) {
         Integer integer = advertisementDao.selectCount(new EntityWrapper<Advertisement>().eq("user_id", userId)
                 .eq("advertisement_id", advertisementId)
-                .eq("ad_status", 3)
-                .eq("status", 1));
+                .eq("ad_status", Constant.AD_STATUS_DESIGN_PASS)
+                .eq("status", Constant.STATUS_NORMAL));
         if (integer<1){
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"该广告不属于该用户");
         }
@@ -162,7 +168,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         if (4!=advertisement.getAdStatus()){
             throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"订单状态有误");
         }
-        advertisement.setAdStatus(5);
+        advertisement.setAdStatus(Constant.AD_STATUS_ALL_PASS);
         advertisement.updateById();
         return ResultInfoUtils.infoData();
     }

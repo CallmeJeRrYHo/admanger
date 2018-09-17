@@ -2,6 +2,7 @@ package com.hjh.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.hjh.constant.Constant;
 import com.hjh.dao.AdWarningDao;
 import com.hjh.dao.WarningHandleDao;
 import com.hjh.entity.AdWarning;
@@ -54,7 +55,7 @@ public class WarningController extends BaseController {
             AdWarningWithPic warningDetail = adWarningDao.getWarningDetail(warningId);
             List<WarningHandle> warningHandles = warningHandleDao.selectList(new EntityWrapper<WarningHandle>()
                     .eq("warning_id", warningId)
-                    .eq("status", 1)
+                    .eq("status", Constant.STATUS_NORMAL)
                     .orderBy("create_time", false));
             warningDetail.setWarningHandles(warningHandles);
             return ResultInfoUtils.infoData(warningDetail);

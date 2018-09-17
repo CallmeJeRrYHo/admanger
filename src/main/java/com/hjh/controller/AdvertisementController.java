@@ -1,6 +1,7 @@
 package com.hjh.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.hjh.constant.Constant;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.entity.PicFile;
 import com.hjh.service.IAdWarningService;
@@ -52,8 +53,8 @@ public class AdvertisementController extends BaseController {
             List<Map<String, Object>> adDetail = advertisementDao.getAdDetail(advertisementId);
             PicFile picFile=new PicFile();
             List<PicFile> picFiles = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
-                    .eq("status", 1)
-                    .eq("type", 3));
+                    .eq("status", Constant.STATUS_NORMAL)
+                    .eq("type", Constant.PIC_LIVE_VIEW_PIC));
             if (adDetail.size()<1){
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告id有误");
             }

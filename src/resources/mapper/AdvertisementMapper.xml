@@ -84,6 +84,7 @@
                 AND c.company_name like CONCAT("%",#{keyWord},"%")
             </if>
         </where>
+        order  by ad.create_time desc
     </select>
 
     <select id="getAdDetail" resultType="Map">

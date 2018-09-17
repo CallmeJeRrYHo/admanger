@@ -1,5 +1,6 @@
 package com.hjh.service.impl;
 
+import com.hjh.constant.Constant;
 import com.hjh.entity.Msg;
 import com.hjh.dao.MsgDao;
 import com.hjh.entity.PicFile;
@@ -40,7 +41,7 @@ public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgServ
         }
         Msg msg=new Msg();
         msg.setContent(content);
-        msg.setStatus(1);
+        msg.setStatus(Constant.STATUS_NORMAL);
         msg.setCreateUserId(userId);
         String msgId = UUID.randomUUID().toString();
         msg.setMsgId(msgId);
@@ -53,8 +54,8 @@ public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgServ
                 picFile.setPicId(jsonObject.getString("pic_id"));
                 picFile.setPath(jsonObject.getString("path"));
                 picFile.setBusnessId(msgId);
-                picFile.setStatus(1);
-                picFile.setType(5);
+                picFile.setStatus(Constant.STATUS_NORMAL);
+                picFile.setType(Constant.PIC_MSG_PIC);
                 picFile.insert();
             }
         }

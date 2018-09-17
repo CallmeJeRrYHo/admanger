@@ -34,6 +34,9 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         TUser tUser =new TUser();
         tUser=tUser.selectOne(new EntityWrapper().eq("mobile",account)
         .eq("status",1));
+        if (EmptyUtils.isEmpty(tUser)){
+            throw new YqhException(BaseMessageEnum.USER_NOT_EXIST);
+        }
         if (!password.equals(tUser.getPassword())){
             throw new YqhException(BaseMessageEnum.LOGIN_FAILL);
         }

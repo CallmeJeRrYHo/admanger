@@ -3,6 +3,7 @@ package com.hjh.service.impl;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.gson.JsonArray;
+import com.hjh.constant.Constant;
 import com.hjh.dao.WarningHandleDao;
 import com.hjh.entity.AdWarning;
 import com.hjh.dao.AdWarningDao;
@@ -50,7 +51,7 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         adWarning.setWarningId(warningId);
         adWarning.setAdvertisememtId(advertisementId);
         adWarning.setUserId(userId);
-        adWarning.setWarningStatus(1);
+        adWarning.setWarningStatus(Constant.WARING_WAIT_DEAL);
         adWarning.setContent(content);
         adWarning.setCompanyId(tUser.getCompanyId());
         adWarning.insert();
@@ -61,9 +62,9 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
                 PicFile picFile=new PicFile();
                 picFile.setPicId(UUID.randomUUID().toString());
                 picFile.setPath(x.getString("path"));
-                picFile.setType(4);
+                picFile.setType(Constant.PIC_WARING_PIC);
                 picFile.setBusnessId(warningId);
-                picFile.setStatus(1);
+                picFile.setStatus(Constant.STATUS_NORMAL);
                 picFile.insert();
             }
         }
@@ -75,8 +76,8 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         //是否存在未审核的处理
         Integer num = warningHandleDao.selectCount(new EntityWrapper<WarningHandle>()
                 .eq("warning_id", warningId)
-                .eq("status", 1)
-                .eq("handle_status", 1));
+                .eq("status", Constant.STATUS_NORMAL)
+                .eq("handle_status", Constant.HANDLE_STATUS_WAIT));
         if (num>0){
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"还有处理为审核，请审核后再次添加");
         }
@@ -90,8 +91,8 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         WarningHandle warningHandle = new WarningHandle();
         warningHandle.setHandleId(UUID.randomUUID().toString());
         warningHandle.setContent(content);
-        warningHandle.setHandleStatus(1);
-        warningHandle.setStatus(1);
+        warningHandle.setHandleStatus(Constant.HANDLE_STATUS_WAIT);
+        warningHandle.setStatus(Constant.STATUS_NORMAL);
         warningHandle.setWarningId(warningId);
         warningHandle.insert();
         return ResultInfoUtils.infoData();
@@ -109,21 +110,21 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         //是否存在可以审核的报警处理
         WarningHandle t = new WarningHandle();
         t.setWarningId(warningId);
-        t.setHandleStatus(1);
-        t.setStatus(1);
+        t.setHandleStatus(Constant.HANDLE_STATUS_WAIT);
+        t.setStatus(Constant.STATUS_NORMAL);
         WarningHandle warningHandle = warningHandleDao.selectOne(t);
         if (EmptyUtils.isEmpty(warningHandle)){
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"不存在待审核的处理");
         }
         if (auditStatus==1){
-            warningHandle.setHandleStatus(2);
+            warningHandle.setHandleStatus(Constant.WARING_FINISH);
             warningHandle.updateById();
             AdWarning adWarning=new AdWarning();
             adWarning.setWarningId(warningId);
-            adWarning.setWarningStatus(2);
+            adWarning.setWarningStatus(Constant.HANDLE_STATUS_PASS);
             adWarning.updateById();
         }else {
-            warningHandle.setHandleStatus(3);
+            warningHandle.setHandleStatus(Constant.HANDLE_STATUS_NOT_PASS);
             warningHandle.updateById();
         }
         return ResultInfoUtils.infoData();

@@ -1,6 +1,7 @@
 package com.hjh.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.hjh.constant.Constant;
 import com.hjh.entity.Company;
 import com.hjh.dao.CompanyDao;
 import com.hjh.entity.TUser;
@@ -34,14 +35,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         checkIsMonitor(userId);
         Integer num = companyDao.selectCount(new EntityWrapper<Company>()
                 .eq("company_name", companyName)
-                .eq("status", 1));
+                .eq("status", Constant.STATUS_NORMAL));
         if (num > 0) {
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "公司名字已存在");
         }
         Company company = new Company();
         company.setCompanyId(UUID.randomUUID().toString());
         company.setCompanyName(companyName);
-        company.setStatus(1);
+        company.setStatus(Constant.STATUS_NORMAL);
         company.insert();
         return ResultInfoUtils.infoData();
     }
@@ -69,7 +70,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         checkIsMonitor(userId);
         Company company=new Company();
         company.setCompanyId(companyId);
-        company.setStatus(-1);
+        company.setStatus(Constant.STATUS_DELETE);
         company.updateById();
         return ResultInfoUtils.infoData();
     }
