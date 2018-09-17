@@ -1,7 +1,11 @@
 package com.hjh.dao;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.entity.Msg;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface MsgDao extends BaseMapper<Msg> {
 
+    List<Msg> selectMsg(@Param("index") Integer index,@Param("pageSize")Integer pageSize);
+    long selectMsgCount();
 }

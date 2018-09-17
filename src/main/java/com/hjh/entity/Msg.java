@@ -4,7 +4,10 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -14,6 +17,7 @@ import java.io.Serializable;
  * @author hjh
  * @since 2018-09-12
  */
+@Data
 public class Msg extends Model<Msg> {
 
     private static final long serialVersionUID = 1L;
@@ -36,56 +40,12 @@ public class Msg extends Model<Msg> {
 	private Date createTime;
 	@TableField("modify_time")
 	private Date modifyTime;
-
-
-	public String getMsgId() {
-		return msgId;
-	}
-
-	public void setMsgId(String msgId) {
-		this.msgId = msgId;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getModifyTime() {
-		return modifyTime;
-	}
-
-	public void setModifyTime(Date modifyTime) {
-		this.modifyTime = modifyTime;
-	}
-
+	@TableField("create_user_id")
+	private String createUserId;
+	@TableField(exist = false)
+	private List<PicFile> picFiles;
+	@TableField(exist = false)
+	private String createUserName;
 	@Override
 	protected Serializable pkVal() {
 		return this.msgId;

@@ -43,4 +43,46 @@
 
         </where>
     </select>
+
+    <select id="selectUsers" resultType="Map">
+        SELECT
+        u.mobile,
+        u.portrait_url,
+        u.user_type,
+        u.`name`,
+        u.superior_id,
+        u2.`name` AS superior_name,
+        c.company_name
+        FROM
+        t_user u
+        LEFT JOIN company c ON u.company_id = c.company_id
+        LEFT JOIN t_user u2 ON u.superior_id=u2.user_id
+        <where>
+            AND u.`status` =1
+            and c.`status` =1
+            <if test="companyId != null and companyId!=''">
+                and u.company_id=#{companyId}
+            </if>
+            <if test="userType !=null">
+                and u.user_type=#{userType}
+            </if>
+        </where>
+        order by u.create_time desc
+    </select>
+    <select id="selectUsersCount" resultType="Long">
+        SELECT count(*)
+        FROM
+        t_user u
+        LEFT JOIN company c ON u.company_id = c.company_id
+        <where>
+            AND u.`status` =1
+            and c.`status` =1
+            <if test="companyId != null and companyId!=''">
+                and u.company_id=#{companyId}
+            </if>
+            <if test="userType !=null">
+                and u.user_type=#{userType}
+            </if>
+        </where>
+    </select>
 </mapper>

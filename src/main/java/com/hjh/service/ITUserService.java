@@ -19,4 +19,8 @@ public interface ITUserService extends IService<TUser> {
     String updateUserInfo(String userId, String userName, String path);
 
     String changePassword(String userId, String oldPassword, String newPassword);
+
+    String addUser(String name, String mobile, String superiorUserId, String companyId,  Integer userType, String password);
+
+    String deleteUser(String userId, String deleteUserId);
 }

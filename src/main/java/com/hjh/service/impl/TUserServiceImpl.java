@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * <p>
  *  服务实现类
@@ -24,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements ITUserService {
-
 
     @Autowired
     TUserDao tUserDao;
@@ -65,6 +66,49 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         }
         tUser.setPassword(newPassword);
         tUser.updateById();
+        return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    public String addUser(String name, String mobile, String superiorUserId, String companyId,  Integer userType, String password) {
+        if (1==userType) {
+            TUser superior = new TUser();
+            superior.setUserId(superiorUserId);
+            superior = superior.selectById();
+            if (2 != superior.getUserType()) {
+                throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "上级不是监管者，请重新选择");
+            }
+        }
+        Integer integer = tUserDao.selectCount(new EntityWrapper<TUser>().eq("status", 1)
+                .eq("mobile", mobile));
+        if (integer>0){
+            throw new YqhException(BaseMessageEnum.MOBILE_EXIST);
+        }
+        TUser tUser=new TUser();
+        tUser.setUserId(UUID.randomUUID().toString());
+        tUser.setName(name);
+        tUser.setMobile(mobile);
+        tUser.setSuperiorId(superiorUserId);
+        tUser.setCompanyId(companyId);
+        tUser.setPassword(password);
+        tUser.setUserType(userType);
+        tUser.setStatus(1);
+        tUser.insert();
+        return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    public String deleteUser(String userId, String deleteUserId) {
+        TUser tUser=new TUser();
+        tUser.setUserId(userId);
+        tUser=tUser.selectById();
+        if (2!=tUser.getUserType()) {
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"操作用户不为监管者");
+        }
+        TUser delUser=new TUser();
+        delUser.setUserId(deleteUserId);
+        delUser.setStatus(-1);
+        delUser.updateById();
         return ResultInfoUtils.infoData();
     }
 }

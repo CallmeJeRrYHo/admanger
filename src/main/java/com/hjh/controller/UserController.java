@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.dao.CompanyDao;
 import com.hjh.dao.TUserDao;
 import com.hjh.entity.Company;
+import com.hjh.entity.TUser;
 import com.hjh.service.ICompanyService;
 import com.hjh.service.ITUserService;
 import com.yqh.util.common.BaseController;
 import com.yqh.util.common.ResultInfoUtils;
 import com.yqh.util.common.YqhException;
 import com.yqh.util.common.enums.BaseMessageEnum;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,5 +126,58 @@ public class UserController extends BaseController {
         }catch(Exception e){
             return handleError(e);
         }
+    }
+    @RequestMapping("/deleteCompany")
+    @ResponseBody
+    public String deleteCompany(String userId,String companyId){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("companyId",companyId);
+            return iCompanyService.deleteCompany(userId,companyId);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+    @RequestMapping("/addUser")
+    @ResponseBody
+    public  String addUser(String name,String mobile,String superiorUserId,String companyId,Integer userType,String password){
+        try{
+            checkNecessaryParameter("name",name);
+            checkNecessaryParameter("companyId",companyId);
+            checkNecessaryParameter("mobile",mobile);
+            checkNecessaryParameter("userType",userType);
+            if (1==userType){
+                checkNecessaryParameter("superiorUserId",superiorUserId);
+            }
+            checkNecessaryParameter("password",password);
+            return itUserService.addUser(name,mobile,superiorUserId,companyId,userType,password);
+        }catch(Exception e){
+            return handleError(e);
+        }
+
+    }
+
+    @RequestMapping("/deleteUser")
+    @ResponseBody
+    public String deleteUser(String userId,String deleteUserId){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("deleteUserId",deleteUserId);
+            return itUserService.deleteUser(userId,deleteUserId);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+    @RequestMapping("/selectUsers")
+    @ResponseBody
+    public String selectUsers(String companyId,Integer userType,@RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
+        try{
+            List<Map<String,Object>> users = tUserDao.selectUsers(new Page<TUser>(index, pageSize), companyId, userType);
+            long l = tUserDao.selectUsersCount(companyId, userType);
+            return ResultInfoUtils.infoData(users,l);
+        }catch(Exception e){
+            return handleError(e);
+        }
+
     }
 }

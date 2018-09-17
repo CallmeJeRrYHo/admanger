@@ -64,4 +64,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         return ResultInfoUtils.infoData();
     }
 
+    @Override
+    public String deleteCompany(String userId, String companyId) {
+        checkIsMonitor(userId);
+        Company company=new Company();
+        company.setCompanyId(companyId);
+        company.setStatus(-1);
+        company.updateById();
+        return ResultInfoUtils.infoData();
+    }
+
 }

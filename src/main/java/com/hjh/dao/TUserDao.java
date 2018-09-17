@@ -1,5 +1,6 @@
 package com.hjh.dao;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.entity.TUser;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +19,7 @@ import java.util.Map;
 public interface TUserDao extends BaseMapper<TUser> {
 
     List<Map<String,Object>> getUserInfo(@Param("userId") String userId);
+
+    List<Map<String, Object>> selectUsers(Page<TUser> tUserPage, @Param("companyId") String companyId, @Param("userType") Integer userType);
+    long selectUsersCount(@Param("companyId") String companyId, @Param("userType") Integer userType);
 }

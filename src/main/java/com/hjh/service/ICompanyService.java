@@ -16,4 +16,6 @@ public interface ICompanyService extends IService<Company> {
     String addCompany(String userId, String companyName);
 
     String updateCompany(String userId, String companyId, String companyName);
+
+    String deleteCompany(String userId, String companyId);
 }
