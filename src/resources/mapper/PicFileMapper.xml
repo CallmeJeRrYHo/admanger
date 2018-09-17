@@ -18,4 +18,7 @@
         pic_id AS picId, path, type, busness_id AS busnessId, status, create_time AS createTime, modify_time AS modifyTime
     </sql>
 
+	<select id="selectPicForMsg" resultMap="BaseResultMap">
+		SELECT * FROM pic_file WHERE busness_id=#{msg_id} and type=5 and `status`=1;
+	</select>
 </mapper>

@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.Serializable;
 
@@ -17,6 +21,7 @@ import java.io.Serializable;
  * @author hjh
  * @since 2018-09-12
  */
+
 @TableName("t_user")
 public class TUser extends Model<TUser> {
 
@@ -40,9 +45,13 @@ public class TUser extends Model<TUser> {
      */
 	@TableField("portrait_url")
 	private String portraitUrl;
-    /**
+
+
+	/**
      * 密码
      */
+    @JsonProperty(required = false)
+	@JsonIgnore
 	private String password;
     /**
      * 用户类型 1管理者 2监管者
@@ -52,7 +61,6 @@ public class TUser extends Model<TUser> {
     /**
      * 公司企业id 
      */
-	@JsonProperty(value = "company_id")
 	@TableField("company_id")
 	private String companyId;
     /**
@@ -66,6 +74,10 @@ public class TUser extends Model<TUser> {
 	@TableField("modify_time")
 	private Date modifyTime;
 
+	@TableField(exist = false)
+	private String superiorName;
+	@TableField(exist = false)
+	private String companyName;
 
 	public String getUserId() {
 		return userId;
@@ -99,6 +111,7 @@ public class TUser extends Model<TUser> {
 		this.portraitUrl = portraitUrl;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -153,6 +166,22 @@ public class TUser extends Model<TUser> {
 
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	public String getSuperiorName() {
+		return superiorName;
+	}
+
+	public void setSuperiorName(String superiorName) {
+		this.superiorName = superiorName;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	@Override

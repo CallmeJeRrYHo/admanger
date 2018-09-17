@@ -17,6 +17,6 @@ import java.util.List;
  */
 public interface MsgDao extends BaseMapper<Msg> {
 
-    List<Msg> selectMsg(@Param("index") Integer index,@Param("pageSize")Integer pageSize);
+    List<Msg> selectMsg(Page<Msg> page);
     long selectMsgCount();
 }

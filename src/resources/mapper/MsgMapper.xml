@@ -12,9 +12,9 @@
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
         <result column="create_user_name" property="createUserName"/>
-        <collection property="picFiles" ofType="com.hjh.entity.PicFile">
-            <id property="picId" column="pic_id"/>
-            <result column="path" property="path"/>
+        <collection property="picFiles" ofType="com.hjh.entity.PicFile" column="msg_id"
+                select="com.hjh.dao.PicFileDao.selectPicForMsg">
+
         </collection>
     </resultMap>
 
@@ -27,25 +27,21 @@
     <select id="selectMsg" resultMap="BaseResultMap">
         SELECT
         m.*,
-        u.`name` AS create_user_name,
-        p.path,
-        p.pic_id
+        u.`name` AS create_user_name
         FROM
         msg m
         LEFT JOIN t_user u ON m.create_user_id = u.user_id
-        LEFT JOIN pic_file p ON (p.busness_id=m.msg_id AND p.type=5)
         <where>
             u.`status` = 1
             AND m.`status` =1
         </where>
-        limit #{index}, #{pageSize};
+        ORDER BY m.create_time DESC
     </select>
     <select id="selectMsgCount" resultType="long">
         SELECT count(*)
         FROM
         msg m
         LEFT JOIN t_user u ON m.create_user_id = u.user_id
-        LEFT JOIN pic_file p ON (p.busness_id=m.msg_id AND p.type=5)
         <where>
             u.`status` = 1
             AND m.`status` =1

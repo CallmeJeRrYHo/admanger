@@ -15,6 +15,8 @@
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
+        <result column="superior_name" property="superiorName"/>
+        <result column="company_name" property="companyName"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -23,7 +25,7 @@
     </sql>
 
 
-    <select id="getUserInfo" resultType="Map">
+    <select id="getUserInfo" resultMap="BaseResultMap">
         SELECT
         u.mobile,
         u.portrait_url,
@@ -44,8 +46,9 @@
         </where>
     </select>
 
-    <select id="selectUsers" resultType="Map">
+    <select id="selectUsers" resultMap="BaseResultMap">
         SELECT
+        u.user_id,
         u.mobile,
         u.portrait_url,
         u.user_type,

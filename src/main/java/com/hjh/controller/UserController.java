@@ -109,7 +109,9 @@ public class UserController extends BaseController {
     public String selectCompany(@RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
         try{
             Company company = new Company();
-            Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), new EntityWrapper<Company>().eq("status", 1));
+            Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), new EntityWrapper<Company>()
+                    .eq("status", 1)
+                    .orderBy("create_time",false));
             return ResultInfoUtils.infoData(status.getRecords(),status.getTotal());
         }catch(Exception e){
             return handleError(e);

@@ -78,6 +78,7 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
             if (2 != superior.getUserType()) {
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "上级不是监管者，请重新选择");
             }
+            companyId=superior.getCompanyId();
         }
         Integer integer = tUserDao.selectCount(new EntityWrapper<TUser>().eq("status", 1)
                 .eq("mobile", mobile));

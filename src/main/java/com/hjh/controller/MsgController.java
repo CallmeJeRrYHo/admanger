@@ -40,7 +40,7 @@ public class MsgController extends BaseController {
     @RequestMapping("/selectMsg")
     public String selectMsg(@RequestParam(defaultValue = "1") Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
         try{
-            List<Msg> msgs = msgDao.selectMsg((index-1)*pageSize, pageSize);
+            List<Msg> msgs = msgDao.selectMsg(new Page<Msg>(index,pageSize));
             long l = msgDao.selectMsgCount();
             return ResultInfoUtils.infoData(msgs,l);
         }catch(Exception e){
