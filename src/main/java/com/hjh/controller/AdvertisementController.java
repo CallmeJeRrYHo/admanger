@@ -55,10 +55,14 @@ public class AdvertisementController extends BaseController {
             List<PicFile> picFiles = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
                     .eq("status", Constant.STATUS_NORMAL)
                     .eq("type", Constant.PIC_LIVE_VIEW_PIC));
+            List<PicFile> designPic = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
+                    .eq("status", Constant.STATUS_NORMAL)
+                    .eq("type", Constant.PIC_DESIGN_PIC));
             if (adDetail.size()<1){
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告id有误");
             }
             adDetail.get(0).put("pics",picFiles);
+            adDetail.get(0).put("design_pic",designPic);
             return ResultInfoUtils.infoData(adDetail.get(0));
 
         }catch(Exception e){
@@ -81,11 +85,11 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/selectMyAd")
-    public String selectMyAd(String userId,Integer adType,Integer adSpec,@RequestParam(defaultValue = "1") Integer index,@RequestParam(defaultValue = "10") Integer pageSize){
+    public String selectMyAd(String userId,Integer adType,Integer adSpec,Integer adStatus,@RequestParam(defaultValue = "1") Integer index,@RequestParam(defaultValue = "10") Integer pageSize){
         try{
         checkNecessaryParameter("userId",userId);
 
-            return iAdvertisementService.selectMyAd(userId,adType,adSpec,index,pageSize);
+            return iAdvertisementService.selectMyAd(userId,adType,adSpec,adStatus,index,pageSize);
         }catch(Exception e){
             return handleError(e);
         }
@@ -105,19 +109,19 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/addAdvertisement")
-    public String addAdvertisement(String userId,String serial_num,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String pic){
+    public String addAdvertisement(String userId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic){
         try{
             checkNecessaryParameter("userId",userId);
-            checkNecessaryParameter("序号",serial_num);
+            checkNecessaryParameter("序号",serialNum);
             checkNecessaryParameter("经度",lontitude);
             checkNecessaryParameter("纬度",latitude);
             checkNecessaryParameter("广告类型",adType);
             checkNecessaryParameter("广告序号",adSpec);
             checkNecessaryParameter("序号",hasLeaderPortrait);
             checkNecessaryParameter("广告内容",adContent);
-            checkNecessaryParameter("图片",pic);
+            checkNecessaryParameter("图片",designPic);
 
-            return iAdvertisementService.addAdvertisement(userId,serial_num,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,pic);
+            return iAdvertisementService.addAdvertisement(userId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic);
         }catch(Exception e){
             return handleError(e);
         }
@@ -160,6 +164,20 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("advertisementId",advertisementId);
             return iAdvertisementService.auditLiveView(userId,advertisementId);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/updateDesignAudit")
+    public String updateDesignAudit(String userId,String advertisementId,String designPic){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("advertisementId",advertisementId);
+            checkNecessaryParameter("图片",designPic);
+            return iAdvertisementService.updateDesignAudit(userId,advertisementId,designPic);
         }catch(Exception e){
             return handleError(e);
         }

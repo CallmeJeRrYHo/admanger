@@ -17,4 +17,6 @@ import java.util.List;
 public interface PicFileDao extends BaseMapper<PicFile> {
 
     List<PicFile> selectPicForMsg(@Param("msg_id")String msg_id);
+
+    List<PicFile> selectPicForAd(@Param("advertisement_id")String msg_id);
 }

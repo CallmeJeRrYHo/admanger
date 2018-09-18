@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController extends BaseController {
+public class UserController extends MyBaseController {
     @Autowired
     ITUserService itUserService;
     @Autowired
@@ -44,8 +44,8 @@ public class UserController extends BaseController {
     public String login(String account,String password){
         try{
 
-        checkNecessaryParameter("account",account);
-        checkNecessaryParameter("password",password);
+        checkNecessaryParameter("账号",account);
+        checkNecessaryParameter("密码",password);
 
             return itUserService.login(account,password);
         }catch(Exception e){
@@ -85,8 +85,8 @@ public class UserController extends BaseController {
     public String changePassword(String userId,String oldPassword,String newPassword){
         try{
             checkNecessaryParameter("userId",userId);
-            checkNecessaryParameter("oldPassword",oldPassword);
-            checkNecessaryParameter("newPassword",newPassword);
+            checkNecessaryParameter("旧密码",oldPassword);
+            checkNecessaryParameter("新密码",newPassword);
             return itUserService.changePassword(userId,oldPassword,newPassword);
         }catch(Exception e){
             return handleError(e);
@@ -123,7 +123,7 @@ public class UserController extends BaseController {
     public String updateCompany(String userId,String companyId,String companyName){
         try{
             checkNecessaryParameter("userId",userId);
-            checkNecessaryParameter("companyName",companyName);
+            checkNecessaryParameter("公司名",companyName);
             checkNecessaryParameter("companyId",companyId);
             return iCompanyService.updateCompany(userId,companyId,companyName);
         }catch(Exception e){
@@ -145,14 +145,14 @@ public class UserController extends BaseController {
     @ResponseBody
     public  String addUser(String name,String mobile,String superiorUserId,String companyId,Integer userType,String password){
         try{
-            checkNecessaryParameter("name",name);
+            checkNecessaryParameter("名字",name);
             checkNecessaryParameter("companyId",companyId);
-            checkNecessaryParameter("mobile",mobile);
-            checkNecessaryParameter("userType",userType);
+            checkNecessaryParameter("手机号",mobile);
+            checkNecessaryParameter("用户类型",userType);
             if (1==userType){
-                checkNecessaryParameter("superiorUserId",superiorUserId);
+                checkNecessaryParameter("上级",superiorUserId);
             }
-            checkNecessaryParameter("password",password);
+            checkNecessaryParameter("密码",password);
             return itUserService.addUser(name,mobile,superiorUserId,companyId,userType,password);
         }catch(Exception e){
             return handleError(e);

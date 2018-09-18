@@ -41,7 +41,8 @@
         <result column="status" property="status"/>
         <result column="modify_time" property="modifyTime"/>
         <result column="create_time" property="createTime"/>
-        <collection property="pics" ofType="com.hjh.entity.PicFile">
+        <collection property="pics" column="advertisement_id" ofType="com.hjh.entity.PicFile"
+                    select="com.hjh.dao.PicFileDao.selectPicForMsg">
             <id column="path" property="path"/>
             <result column="type" property="type"/>
         </collection>
@@ -65,11 +66,11 @@
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
         LEFT JOIN t_user u ON u.user_id = ad.user_id
-        left JOIN pic_file pf on pf.busness_id=ad.advertisement_id
+        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id and pf.type=3)
         <where>
             ad.`status` = 1
             and c.`status`=1
-            and pf.type=3
+
             AND ad.ad_status =5
             <if test="adSpec != null">
                 AND ad.ad_spec=#{adSpec}
@@ -84,7 +85,8 @@
                 AND c.company_name like CONCAT("%",#{keyWord},"%")
             </if>
         </where>
-        order  by ad.create_time desc
+        group by ad.advertisement_id
+        order by ad.create_time desc
     </select>
 
     <select id="getAdDetail" resultType="Map">
@@ -100,16 +102,18 @@
         <where>
             ad.`status` = 1
             and c.`status`=1
-            AND ad.ad_status =5
             <if test="advertisementId != null and advertisementId != ''">
                 AND ad.advertisement_id=#{advertisementId}
             </if>
         </where>
     </select>
 
-    <select id="selectMyAd" resultMap="MyAdMap">
+    <select id="selectMyAd" resultType="Map">
         SELECT
-        ad.*,
+        ad.serial_num,
+        ad.advertisement_id,
+        ad.address,
+        ad.ad_status,
         u.`name`,
         c.company_name,
         pf.path,
@@ -118,7 +122,7 @@
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
         LEFT JOIN t_user u ON u.user_id = ad.user_id
-        left JOIN pic_file pf on pf.busness_id=ad.advertisement_id
+        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id AND pf.type=2 AND pf.`status`=1)
         <where>
             ad.`status` = 1
             and c.`status`=1
@@ -128,9 +132,15 @@
             <if test="adType != null">
                 AND ad.ad_type=#{adType}
             </if>
-          <if test="userId != null and userId != ''">
-              and ad.user_id=#{userId}
-          </if>
+            <if test="userId != null and userId != ''">
+                and (ad.user_id=#{userId}
+                OR u.superior_id = #{userId})
+            </if>
+            <if test="adStatus !=null and adStatus!=''">
+                and ad.ad_status=#{adStatus}
+            </if>
         </where>
+        group by ad.advertisement_id
+        order by ad.create_time desc
     </select>
 </mapper>

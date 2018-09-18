@@ -3,6 +3,7 @@ package com.hjh.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.constant.Constant;
+import com.hjh.dao.PicFileDao;
 import com.hjh.entity.Advertisement;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.entity.MyAd;
@@ -10,6 +11,7 @@ import com.hjh.entity.PicFile;
 import com.hjh.entity.TUser;
 import com.hjh.service.IAdvertisementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.yqh.util.common.EmptyUtils;
 import com.yqh.util.common.ResultInfoUtils;
 import com.yqh.util.common.YqhException;
 import com.yqh.util.common.enums.BaseMessageEnum;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -38,9 +41,11 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Autowired
     AdvertisementDao advertisementDao;
+    @Autowired
+    PicFileDao picFileDao;
     @Override
-    public String selectMyAd(String userId, Integer adType, Integer adSpec, Integer index, Integer pageSize) {
-        List<MyAd> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec);
+    public String selectMyAd(String userId, Integer adType, Integer adSpec,Integer adStatus, Integer index, Integer pageSize) {
+        List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec,adStatus);
         return ResultInfoUtils.infoData(myAds);
     }
 
@@ -62,7 +67,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addAdvertisement(String userId, String serial_num, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic) {
+    public String addAdvertisement(String userId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic) {
         TUser tUser=new TUser();
         tUser.setUserId(userId);
         tUser=tUser.selectById();
@@ -72,7 +77,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdvertisementId(id);
         advertisement.setUserId(userId);
         advertisement.setCompanyId(tUser.getCompanyId());
-        advertisement.setSerialNum(serial_num);
+        advertisement.setSerialNum(serialNum);
         advertisement.setLontitude(BigDecimal.valueOf(lontitude));
         advertisement.setLatitude(BigDecimal.valueOf(latitude));
         advertisement.setAdType(adType);
@@ -169,6 +174,39 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"订单状态有误");
         }
         advertisement.setAdStatus(Constant.AD_STATUS_ALL_PASS);
+        advertisement.updateById();
+        return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
+    public String updateDesignAudit(String userId, String advertisementId, String pic) {
+        Advertisement advertisement=new Advertisement();
+        advertisement.setAdvertisementId(advertisementId);
+        advertisement.setUserId(userId);
+        advertisement=advertisement.selectById();
+        if (EmptyUtils.isEmpty(advertisement)) {
+            throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"您不是该广告的创建者");
+        }
+        if (Constant.AD_STATUS_DESIGN_NOT_PASS!=advertisement.getAdStatus()) {
+            throw new YqhException(BaseMessageEnum.UPDATE_ERROR,"广告状态有误");
+        }
+        picFileDao.delete(new EntityWrapper<PicFile>()
+        .eq("busness_id",advertisementId)
+        .eq("status",Constant.STATUS_NORMAL)
+        .eq("type",Constant.PIC_DESIGN_PIC));
+        JSONArray jsonArray=JSONArray.fromObject(pic);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            PicFile picFile=new PicFile();
+            picFile.setPicId(jsonObject.getString("pic_id"));
+            picFile.setPath(jsonObject.getString("path"));
+            picFile.setStatus(Constant.STATUS_NORMAL);
+            picFile.setType(Constant.PIC_DESIGN_PIC);
+            picFile.setBusnessId(advertisementId);
+            picFile.insertOrUpdate();
+        }
+        advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT);
         advertisement.updateById();
         return ResultInfoUtils.infoData();
     }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author： Jerry
@@ -18,7 +19,7 @@ public class MyAd {
 
     private static final long serialVersionUID = 1L;
 
-    private ArrayList<PicFile> pics;
+
     @TableId("advertisement_id")
     private String advertisementId;
     /**
@@ -89,16 +90,18 @@ public class MyAd {
     private Date createTime;
 
 
+    @TableField(exist = false)
+    private List<PicFile> pics;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public ArrayList<PicFile> getPics() {
+    public List<PicFile> getPics() {
         return pics;
     }
 
-    public void setPics(ArrayList<PicFile> pics) {
+    public void setPics(List<PicFile> pics) {
         this.pics = pics;
     }
 
