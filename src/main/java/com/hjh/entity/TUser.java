@@ -7,9 +7,6 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
-import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.Serializable;
 
@@ -67,7 +64,7 @@ public class TUser extends Model<TUser> {
      * 上级id 角色为管理者的时候不为空
      */
 	@TableField("superior_id")
-	private String superiorId;
+	private String superiorUserId;
 	private Integer status;
 	@TableField("create_time")
 	private Date createTime;
@@ -136,12 +133,12 @@ public class TUser extends Model<TUser> {
 		this.companyId = companyId;
 	}
 
-	public String getSuperiorId() {
-		return superiorId;
+	public String getSuperiorUserId() {
+		return superiorUserId;
 	}
 
-	public void setSuperiorId(String superiorId) {
-		this.superiorId = superiorId;
+	public void setSuperiorUserId(String superiorUserId) {
+		this.superiorUserId = superiorUserId;
 	}
 
 	public Integer getStatus() {

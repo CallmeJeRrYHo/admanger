@@ -58,6 +58,8 @@
         SELECT
         ad.serial_num,
         ad.advertisement_id,
+        ad.lontitude,
+        ad.latitude,
         ad.address,
         u.`name`,
         c.company_name,
@@ -113,6 +115,8 @@
         ad.serial_num,
         ad.advertisement_id,
         ad.address,
+        ad.lontitude,
+        ad.latitude,
         ad.ad_status,
         u.`name`,
         c.company_name,

@@ -61,7 +61,7 @@ public class AdvertisementController extends BaseController {
             if (adDetail.size()<1){
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告id有误");
             }
-            adDetail.get(0).put("pics",picFiles);
+            adDetail.get(0).put("pic",picFiles);
             adDetail.get(0).put("design_pic",designPic);
             return ResultInfoUtils.infoData(adDetail.get(0));
 

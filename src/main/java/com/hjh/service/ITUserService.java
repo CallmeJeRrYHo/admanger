@@ -23,4 +23,6 @@ public interface ITUserService extends IService<TUser> {
     String addUser(String name, String mobile, String superiorUserId, String companyId,  Integer userType, String password);
 
     String deleteUser(String userId, String deleteUserId);
+
+    String updateUser(String userId, String name, String mobile, String superiorUserId, String companyId, Integer userType, String password);
 }

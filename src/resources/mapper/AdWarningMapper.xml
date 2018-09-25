@@ -51,11 +51,12 @@
         ad_warning aw
         LEFT JOIN company c ON aw.company_id = c.company_id
         LEFT JOIN t_user u ON u.user_id = aw.user_id
+        LEFT JOIN t_user u2 ON u2.user_id = aw.handle_user_id
         LEFT JOIN advertisement ad ON ad.advertisement_id=aw.advertisememt_id
         <where>
             <if test="userId !=null and userId != ''">
-                aw.user_id = #{userId}
-                OR (u.superior_id = #{userId})
+                (aw.handle_user_id = #{userId}
+                OR u2.superior_id = #{userId})
             </if>
             and aw.`status`=1
         </where>
@@ -63,16 +64,15 @@
     </select>
 
     <select id="selectMyWarningCount" resultType="Long">
-
         SELECT
         COUNT(*)
         FROM
         ad_warning aw
         LEFT JOIN company c ON aw.company_id = c.company_id
-        LEFT JOIN t_user u ON u.user_id = aw.user_id
+        LEFT JOIN t_user u ON u.user_id = aw.handle_user_id
         <where>
             <if test="userId !=null and userId != ''">
-                aw.user_id = #{userId}
+                aw.handle_user_id = #{userId}
                 OR (u.superior_id = #{userId})
             </if>
             and aw.`status`=1
@@ -85,14 +85,15 @@
         ad.address,
         c.company_name,
         u.`name` as create_user_name,
-
+        pf.pic_id,
+        pf.path,
         aw.*
         FROM
         ad_warning aw
         LEFT JOIN t_user u ON u.user_id = aw.user_id
         LEFT JOIN company c ON c.company_id=aw.company_id
         LEFT JOIN advertisement ad on aw.advertisememt_id=ad.advertisement_id
-
+        LEFT JOIN pic_file pf ON (aw.warning_id = pf.busness_id AND pf.type=4 AND pf.`status`=1)
 
         <where>
             <if test="warningId!=null and warningId!=''">

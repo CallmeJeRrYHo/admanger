@@ -54,10 +54,26 @@ public class AdWarningWithPic {
     @TableField("modify_time")
     private Date modifyTime;
 
+    @TableField(exist = false)
     private String companyName;
+    @TableField(exist = false)
     private String createUserName;
+    @TableField(exist = false)
     private String serialNum;
+    @TableField(exist = false)
     private String address;
+    @TableField(exist = false)
     private List<PicFile> picFiles;
+    @TableField(exist = false)
     private List<WarningHandle>  warningHandles;
+    /**
+     * 是否显示处理框 ，1是 0否
+     */
+    @TableField(exist = false)
+    private Integer isShowHandle;
+    /**
+     * 是否显示处理审核框 ，1是 0否
+     */
+    @TableField(exist = false)
+    private Integer isShowHandleAudit;
 }

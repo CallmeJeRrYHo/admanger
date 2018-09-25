@@ -64,6 +64,9 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         TUser tUser = new TUser();
         tUser.setUserId(userId);
         tUser=tUser.selectById();
+        if (EmptyUtils.isEmpty(tUser)){
+            throw new YqhException(BaseMessageEnum.USER_NOT_EXIST);
+        }
         if (!oldPassword.equals(tUser.getPassword())){
             throw new YqhException(BaseMessageEnum.ERROR_PASSWORD);
         }
@@ -92,7 +95,7 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         tUser.setUserId(UUID.randomUUID().toString());
         tUser.setName(name);
         tUser.setMobile(mobile);
-        tUser.setSuperiorId(superiorUserId);
+        tUser.setSuperiorUserId(superiorUserId);
         tUser.setCompanyId(companyId);
         tUser.setPassword(password);
         tUser.setUserType(userType);
@@ -101,6 +104,30 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         return ResultInfoUtils.infoData();
     }
 
+    @Override
+    public String updateUser(String userId, String name, String mobile, String superiorUserId, String companyId, Integer userType, String password) {
+        if (1==userType) {
+            TUser superior = new TUser();
+            superior.setUserId(superiorUserId);
+            superior = superior.selectById();
+            if (2 != superior.getUserType()) {
+                throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "上级不是监管者，请重新选择");
+            }
+            companyId=superior.getCompanyId();
+        }
+        TUser tUser=new TUser();
+        tUser.setUserId(userId);
+        tUser.setName(name);
+        tUser.setMobile(mobile);
+        tUser.setSuperiorUserId(superiorUserId);
+        tUser.setCompanyId(companyId);
+        if (EmptyUtils.isNotEmpty(password)) {
+            tUser.setPassword(password);
+        }
+        tUser.setUserType(userType);
+        tUser.updateById();
+        return ResultInfoUtils.infoData();
+    }
     @Override
     public String deleteUser(String userId, String deleteUserId) {
         TUser tUser=new TUser();
@@ -115,4 +142,5 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         delUser.updateById();
         return ResultInfoUtils.infoData();
     }
+
 }

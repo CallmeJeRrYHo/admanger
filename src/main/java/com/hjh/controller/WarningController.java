@@ -10,12 +10,16 @@ import com.hjh.entity.AdWarningWithPic;
 import com.hjh.entity.WarningHandle;
 import com.hjh.service.IAdWarningService;
 import com.yqh.util.common.BaseController;
+import com.yqh.util.common.EmptyUtils;
 import com.yqh.util.common.ResultInfoUtils;
+import com.yqh.util.common.YqhException;
+import com.yqh.util.common.enums.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.invoke.empty.Empty;
 
 import java.util.List;
 
@@ -53,10 +57,26 @@ public class WarningController extends BaseController {
         try{
             checkNecessaryParameter("warningId",warningId);
             AdWarningWithPic warningDetail = adWarningDao.getWarningDetail(warningId);
+            if (EmptyUtils.isEmpty(warningDetail)){
+                throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"报警不存在");
+            }
             List<WarningHandle> warningHandles = warningHandleDao.selectList(new EntityWrapper<WarningHandle>()
                     .eq("warning_id", warningId)
                     .eq("status", Constant.STATUS_NORMAL)
-                    .orderBy("create_time", false));
+                    .orderBy("create_time", true));
+            Integer waitAuditNum = warningHandleDao.selectCount(new EntityWrapper<WarningHandle>()
+                    .eq("warning_id", warningId)
+                    .eq("status", Constant.STATUS_NORMAL)
+                    .eq("handle_status", Constant.HANDLE_STATUS_WAIT));
+            if (Constant.WARING_FINISH==warningDetail.getWarningStatus()){
+                warningDetail.setIsShowHandle(0);
+                warningDetail.setIsShowHandleAudit(0);
+            }else {
+                //有待处理的或者已完成的不显示处理框
+                boolean hasWaitAudit = waitAuditNum > 0;
+                warningDetail.setIsShowHandle(hasWaitAudit ? 0 : 1);
+                warningDetail.setIsShowHandleAudit(hasWaitAudit? 1 : 0);
+            }
             warningDetail.setWarningHandles(warningHandles);
             return ResultInfoUtils.infoData(warningDetail);
         }catch(Exception e){

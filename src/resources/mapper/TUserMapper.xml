@@ -11,7 +11,7 @@
         <result column="password" property="password"/>
         <result column="user_type" property="userType"/>
         <result column="company_id" property="companyId"/>
-        <result column="superior_id" property="superiorId"/>
+        <result column="superior_id" property="superiorUserId"/>
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
@@ -21,16 +21,18 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        user_id AS userId, mobile, name, portrait_url AS portraitUrl, password, user_type AS userType, company_id AS companyId, superior_id AS superiorId, status, create_time AS createTime, modify_time AS modifyTime
+        user_id AS userId, mobile, name, portrait_url AS portraitUrl, password, user_type AS userType, company_id AS companyId, superior_id AS superiorUserId, status, create_time AS createTime, modify_time AS modifyTime
     </sql>
 
 
     <select id="getUserInfo" resultMap="BaseResultMap">
         SELECT
+        u.user_id,
         u.mobile,
         u.portrait_url,
         u.user_type,
         u.`name`,
+        u.company_id,
         u.superior_id,
         u2.`name` AS superior_name,
         c.company_name

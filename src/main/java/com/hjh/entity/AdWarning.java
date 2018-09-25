@@ -63,6 +63,9 @@ public class AdWarning extends Model<AdWarning> {
 	private Date createTime;
 	@TableField("modify_time")
 	private Date modifyTime;
+
+	@TableField("handle_user_id")
+	private String handleUserId;
 	@Override
 	protected Serializable pkVal() {
 		return this.warningId;

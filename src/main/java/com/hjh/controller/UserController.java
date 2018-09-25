@@ -10,6 +10,7 @@ import com.hjh.entity.TUser;
 import com.hjh.service.ICompanyService;
 import com.hjh.service.ITUserService;
 import com.yqh.util.common.BaseController;
+import com.yqh.util.common.EmptyUtils;
 import com.yqh.util.common.ResultInfoUtils;
 import com.yqh.util.common.YqhException;
 import com.yqh.util.common.enums.BaseMessageEnum;
@@ -72,9 +73,12 @@ public class UserController extends MyBaseController {
 
     @RequestMapping("/updateUserInfo")
     @ResponseBody
-    public String updateUserInfo(String userId,String userName,String path){
+    public String updateUserInfo(String userId,String userName,String path,String oldPassword,String newPassword){
         try{
             checkNecessaryParameter("userId",userId);
+            if (EmptyUtils.isNotEmpty(oldPassword)&&EmptyUtils.isNotEmpty(newPassword)){
+                itUserService.changePassword(userId,oldPassword,newPassword);
+            }
             return itUserService.updateUserInfo(userId,userName,path);
         }catch(Exception e){
             return handleError(e);
@@ -146,11 +150,12 @@ public class UserController extends MyBaseController {
     public  String addUser(String name,String mobile,String superiorUserId,String companyId,Integer userType,String password){
         try{
             checkNecessaryParameter("名字",name);
-            checkNecessaryParameter("companyId",companyId);
             checkNecessaryParameter("手机号",mobile);
             checkNecessaryParameter("用户类型",userType);
             if (1==userType){
                 checkNecessaryParameter("上级",superiorUserId);
+            }else {
+                checkNecessaryParameter("公司",companyId);
             }
             checkNecessaryParameter("密码",password);
             return itUserService.addUser(name,mobile,superiorUserId,companyId,userType,password);
@@ -160,6 +165,15 @@ public class UserController extends MyBaseController {
 
     }
 
+    @RequestMapping("/updateUser")
+    @ResponseBody
+    public String updateUser(String userId,String name,String mobile,String superiorUserId,String companyId,Integer userType,String password){
+        try{
+            return itUserService.updateUser(userId,name,mobile,superiorUserId,companyId,userType,password);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
     @RequestMapping("/deleteUser")
     @ResponseBody
     public String deleteUser(String userId,String deleteUserId){

@@ -5,11 +5,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.gson.JsonArray;
 import com.hjh.constant.Constant;
 import com.hjh.dao.WarningHandleDao;
-import com.hjh.entity.AdWarning;
+import com.hjh.entity.*;
 import com.hjh.dao.AdWarningDao;
-import com.hjh.entity.PicFile;
-import com.hjh.entity.TUser;
-import com.hjh.entity.WarningHandle;
 import com.hjh.service.IAdWarningService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.yqh.util.common.EmptyUtils;
@@ -44,15 +41,22 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         tUser.setUserId(userId);
         tUser=tUser.selectById();
 
-
+        Advertisement advertisement=new Advertisement();
+        advertisement.setAdvertisementId(advertisementId);
+        advertisement=advertisement.selectById();
+        if (EmptyUtils.isEmpty(advertisement)) {
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告不存在");
+        }
 
         AdWarning adWarning=new AdWarning();
         String warningId = UUID.randomUUID().toString();
         adWarning.setWarningId(warningId);
         adWarning.setAdvertisememtId(advertisementId);
         adWarning.setUserId(userId);
+        adWarning.setHandleUserId(advertisement.getUserId());
         adWarning.setWarningStatus(Constant.WARING_WAIT_DEAL);
         adWarning.setContent(content);
+        adWarning.setStatus(Constant.STATUS_NORMAL);
         adWarning.setCompanyId(tUser.getCompanyId());
         adWarning.insert();
         if (EmptyUtils.isNotEmpty(pics)){
@@ -85,7 +89,10 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         AdWarning adWarning=new AdWarning();
         adWarning.setWarningId(warningId);
         adWarning=adWarning.selectById();
-        if (1!=adWarning.getWarningStatus()||3!=adWarning.getWarningStatus()){
+        if (EmptyUtils.isEmpty(adWarning)){
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"报警不存在");
+        }
+        if (Constant.WARING_FINISH==adWarning.getWarningStatus()){
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"报警已完成");
         }
         WarningHandle warningHandle = new WarningHandle();
