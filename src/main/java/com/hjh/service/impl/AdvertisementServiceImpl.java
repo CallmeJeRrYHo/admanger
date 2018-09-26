@@ -17,7 +17,6 @@ import com.yqh.util.common.YqhException;
 import com.yqh.util.common.enums.BaseMessageEnum;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -67,7 +66,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addAdvertisement(String userId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic) {
+    public String addAdvertisement(String userId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic, String address) {
         TUser tUser=new TUser();
         tUser.setUserId(userId);
         tUser=tUser.selectById();
@@ -84,6 +83,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdSpec(adSpec);
         advertisement.setHasLeaderPortrait(hasLeaderPortrait);
         advertisement.setAdContent(adContent);
+        advertisement.setAddress(address);
         advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT);
         advertisement.setStatus(Constant.STATUS_NORMAL);
         advertisement.insert();

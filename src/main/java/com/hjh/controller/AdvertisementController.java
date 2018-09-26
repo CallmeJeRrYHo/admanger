@@ -109,7 +109,7 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/addAdvertisement")
-    public String addAdvertisement(String userId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic){
+    public String addAdvertisement(String userId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address){
         try{
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("序号",serialNum);
@@ -121,7 +121,7 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("广告内容",adContent);
             checkNecessaryParameter("图片",designPic);
 
-            return iAdvertisementService.addAdvertisement(userId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic);
+            return iAdvertisementService.addAdvertisement(userId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address);
         }catch(Exception e){
             return handleError(e);
         }
