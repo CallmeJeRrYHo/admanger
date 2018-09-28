@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,5 +19,5 @@ public interface PicFileDao extends BaseMapper<PicFile> {
 
     List<PicFile> selectPicForMsg(@Param("msg_id")String msg_id);
 
-    List<PicFile> selectPicForAd(@Param("advertisement_id")String msg_id);
+    List<Map<String ,Object>> selectDesignPicForAd(@Param("advertisement_id")String advertisement_id);
 }

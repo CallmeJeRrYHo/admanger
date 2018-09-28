@@ -3,6 +3,7 @@ package com.hjh.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.hjh.constant.Constant;
 import com.hjh.dao.AdvertisementDao;
+import com.hjh.dao.PicFileDao;
 import com.hjh.entity.PicFile;
 import com.hjh.service.IAdWarningService;
 import com.hjh.service.IAdvertisementService;
@@ -33,6 +34,8 @@ public class AdvertisementController extends BaseController {
     IAdWarningService adWarningService;
     @Autowired
     IAdvertisementService iAdvertisementService;
+    @Autowired
+    PicFileDao picFileDao;
     @ResponseBody
     @RequestMapping("/selectAdList")
     public String selectAdList(String companyId, Integer adType, Integer adSpec, String keyWord, @RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
@@ -52,17 +55,18 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("advertisementId",advertisementId);
             List<Map<String, Object>> adDetail = advertisementDao.getAdDetail(advertisementId);
             PicFile picFile=new PicFile();
-            List<PicFile> picFiles = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
+            List<Map<String, Object>> list = picFileDao.selectMaps(new EntityWrapper().eq("busness_id", advertisementId)
                     .eq("status", Constant.STATUS_NORMAL)
                     .eq("type", Constant.PIC_LIVE_VIEW_PIC));
-            List<PicFile> designPic = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
-                    .eq("status", Constant.STATUS_NORMAL)
-                    .eq("type", Constant.PIC_DESIGN_PIC));
+//            List<PicFile> designPic = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
+//                    .eq("status", Constant.STATUS_NORMAL)
+//                    .eq("type", Constant.PIC_DESIGN_PIC));
+            List<Map<String, Object>> maps = picFileDao.selectDesignPicForAd(advertisementId);
             if (adDetail.size()<1){
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告id有误");
             }
-            adDetail.get(0).put("pic",picFiles);
-            adDetail.get(0).put("design_pic",designPic);
+            adDetail.get(0).put("pic",list);
+            adDetail.get(0).put("design_pic",maps);
             return ResultInfoUtils.infoData(adDetail.get(0));
 
         }catch(Exception e){
@@ -142,6 +146,25 @@ public class AdvertisementController extends BaseController {
             return handleError(e);
         }
     }
+
+
+    /**
+     * 不通过设计稿重新更新广告
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/updateDesign")
+    public String updateDesign(String userId,String advertisementId,String serialNum,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,Double lontitude,Double latitude){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("advertisementId",advertisementId);
+            return iAdvertisementService.updateDesign(userId,advertisementId,serialNum,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,lontitude,latitude);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+
+
 
     @ResponseBody
     @RequestMapping("/submitLiveViewAudit")

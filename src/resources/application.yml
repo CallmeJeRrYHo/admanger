@@ -19,7 +19,6 @@ mybatis-plus:
   type-aliases-package: com.hjh.entity
   configuration:
     call-setters-on-nulls: true
-    map-underscore-to-camel-case: true
 logging:
   level:
    com:

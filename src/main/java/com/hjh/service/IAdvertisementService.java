@@ -26,4 +26,6 @@ public interface IAdvertisementService extends IService<Advertisement> {
     String auditLiveView(String userId, String advertisementId);
 
     String updateDesignAudit(String userId, String advertisementId, String pic);
+
+    String updateDesign(String userId, String advertisementId, String serialNum, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String designPic, String address, Double lontitude, Double latitude);
 }
