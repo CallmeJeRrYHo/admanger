@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author hjh
- * @since 2018-09-12
+ * @since 2018-10-03
  */
 public class Advertisement extends Model<Advertisement> {
 
@@ -39,6 +39,16 @@ public class Advertisement extends Model<Advertisement> {
      * 纬度
      */
 	private BigDecimal latitude;
+    /**
+     * 附近摄像头
+     */
+	@TableField("near_camera")
+	private String nearCamera;
+    /**
+     * 附近警察局
+     */
+	@TableField("near_police")
+	private String nearPolice;
     /**
      * 序号
      */
@@ -78,7 +88,7 @@ public class Advertisement extends Model<Advertisement> {
 	@TableField("audit_response")
 	private String auditResponse;
     /**
-     * 1待审核设计2设计不通过3待审核实景（设计通过）4实景不通过  5审核通过
+     * 1待审核设计 2设计不通过 3设计通过 4待审核实景 5审核通过
      */
 	@TableField("ad_status")
 	private Integer adStatus;
@@ -127,6 +137,22 @@ public class Advertisement extends Model<Advertisement> {
 
 	public void setLatitude(BigDecimal latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getNearCamera() {
+		return nearCamera;
+	}
+
+	public void setNearCamera(String nearCamera) {
+		this.nearCamera = nearCamera;
+	}
+
+	public String getNearPolice() {
+		return nearPolice;
+	}
+
+	public void setNearPolice(String nearPolice) {
+		this.nearPolice = nearPolice;
 	}
 
 	public String getSerialNum() {

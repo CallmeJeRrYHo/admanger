@@ -57,10 +57,12 @@
         u.`name`,
         u.superior_id,
         u2.`name` AS superior_name,
-        c.company_name
+        group_concat(c.company_name) as company_name,
+        group_concat(c.company_id) as company_id
         FROM
         t_user u
-        LEFT JOIN company c ON u.company_id = c.company_id
+        left join user_company uc on u.user_id = uc.user_id
+        LEFT JOIN company c ON uc.company_id = c.company_id
         LEFT JOIN t_user u2 ON u.superior_id=u2.user_id
         <where>
             AND u.`status` =1
@@ -71,14 +73,21 @@
             <if test="userType !=null">
                 and u.user_type=#{userType}
             </if>
+            <if test="keyWord!=null and keyWord!=''">
+                and u.name like CONCAT('%',#{keyWord},'%')
+            </if>
         </where>
+        group by u.user_id
         order by u.create_time desc
     </select>
     <select id="selectUsersCount" resultType="Long">
-        SELECT count(*)
+        SELECT count(*) from (
+        select
+        u.*
         FROM
         t_user u
-        LEFT JOIN company c ON u.company_id = c.company_id
+        left join user_company uc on u.user_id = uc.user_id
+        LEFT JOIN company c ON uc.company_id = c.company_id
         <where>
             AND u.`status` =1
             and c.`status` =1
@@ -88,6 +97,12 @@
             <if test="userType !=null">
                 and u.user_type=#{userType}
             </if>
+            <if test="keyWord!=null and keyWord!=''">
+                and u.name like CONCAT('%',#{keyWord},'%')
+
+            </if>
         </where>
+        group by u.user_id
+        ) as aa
     </select>
 </mapper>

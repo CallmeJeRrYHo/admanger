@@ -12,6 +12,7 @@
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
         <result column="create_user_name" property="createUserName"/>
+        <result column="read_status" property="readStatus"/>
         <collection property="picFiles" ofType="com.hjh.entity.PicFile" column="msg_id"
                 select="com.hjh.dao.PicFileDao.selectPicForMsg">
 
@@ -27,24 +28,38 @@
     <select id="selectMsg" resultMap="BaseResultMap">
         SELECT
         m.*,
-        u.`name` AS create_user_name
+        u2.`name` AS create_user_name ,
+        IF(mr.msg_read_id is not null,1,0) as read_status
         FROM
-        msg m
-        LEFT JOIN t_user u ON m.create_user_id = u.user_id
+        t_user u
+        LEFT JOIN user_company uc ON uc.user_id = u.user_id
+        LEFT JOIN msg_company mc ON mc.company_id = uc.company_id
+        LEFT JOIN msg m ON m.msg_id = mc.msg_id
+        LEFT JOIN t_user u2 ON m.create_user_id = u2.user_id
+        LEFT JOIN msg_read mr ON (m.msg_id = mr.msg_id and mr.user_id=u.user_id)
         <where>
             u.`status` = 1
             AND m.`status` =1
+            <if test="userId!=null and userId != ''">
+               and u.user_id = #{userId}
+            </if>
         </where>
         ORDER BY m.create_time DESC
     </select>
     <select id="selectMsgCount" resultType="long">
         SELECT count(*)
         FROM
-        msg m
-        LEFT JOIN t_user u ON m.create_user_id = u.user_id
+        t_user u
+        LEFT JOIN user_company uc ON uc.user_id = u.user_id
+        LEFT JOIN msg_company mc ON mc.company_id = uc.company_id
+        LEFT JOIN msg m ON m.msg_id = mc.msg_id
+        LEFT JOIN t_user u2 ON m.create_user_id = u2.user_id
         <where>
             u.`status` = 1
             AND m.`status` =1
+            <if test="userId!=null and userId != ''">
+                and u.user_id = #{userId}
+            </if>
         </where>
     </select>
 </mapper>

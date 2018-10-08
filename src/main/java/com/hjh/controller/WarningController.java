@@ -5,22 +5,19 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.constant.Constant;
 import com.hjh.dao.AdWarningDao;
 import com.hjh.dao.WarningHandleDao;
-import com.hjh.entity.AdWarning;
 import com.hjh.entity.AdWarningWithPic;
 import com.hjh.entity.WarningHandle;
 import com.hjh.service.IAdWarningService;
-import com.yqh.util.common.BaseController;
-import com.yqh.util.common.EmptyUtils;
-import com.yqh.util.common.ResultInfoUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.BaseController;
+import com.hjh.utils.EmptyUtils;
+import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.invoke.empty.Empty;
-
 import java.util.List;
 
 /**

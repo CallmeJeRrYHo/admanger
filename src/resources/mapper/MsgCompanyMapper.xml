@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjh.dao.MsgCompanyDao">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.hjh.entity.MsgCompany">
+		<id column="msg_company_id" property="msgCompanyId" />
+		<result column="msg_id" property="msgId" />
+		<result column="company_id" property="companyId" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="modify_time" property="modifyTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        msg_company_id AS msgCompanyId, msg_id AS msgId, company_id AS companyId, status, create_time AS createTime, modify_time AS modifyTime
+    </sql>
+
+</mapper>

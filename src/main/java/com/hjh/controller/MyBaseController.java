@@ -1,9 +1,9 @@
 package com.hjh.controller;
 
-import com.yqh.util.common.BaseController;
-import com.yqh.util.common.EmptyUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.BaseController;
+import com.hjh.utils.EmptyUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 
 /**
  * @Author： Jerry

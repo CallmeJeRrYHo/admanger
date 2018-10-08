@@ -1,5 +1,6 @@
 package com.hjh.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -75,7 +78,6 @@ public class TUser extends Model<TUser> {
 	private String superiorName;
 	@TableField(exist = false)
 	private String companyName;
-
 	public String getUserId() {
 		return userId;
 	}
@@ -185,5 +187,5 @@ public class TUser extends Model<TUser> {
 	protected Serializable pkVal() {
 		return this.userId;
 	}
-
 }
+

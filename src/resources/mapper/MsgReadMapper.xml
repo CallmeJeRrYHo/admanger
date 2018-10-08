@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjh.dao.MsgReadDao">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.hjh.entity.MsgRead">
+		<id column="msg_read_id" property="msgReadId" />
+		<result column="msg_id" property="msgId" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        msg_read_id AS msgReadId, msg_id AS msgId, user_id AS userId, create_time AS createTime
+    </sql>
+
+</mapper>

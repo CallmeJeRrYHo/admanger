@@ -17,7 +17,7 @@ import java.util.Map;
 public class G2 {
 
     //生成文件所在项目路径
-    private static String baseProjectPath = "d:\\mybatistPlusGen\\";
+    private static String baseProjectPath = "e:\\mybatistPlusGen\\";
 
     //基本包名
     private static String basePackage = "com.hjh";
@@ -26,7 +26,7 @@ public class G2 {
     //要生成的表名
 //    private static String[] tables = {"t_order","attachment","order_append","partner","sys_authority","sys_file","sys_msg," +
 //            "sys_price_rule","sys_role","sys_role_auth","t_user","team","user_bank_card","user_flowlog","user_wallet","company"};
-    private static String[] tables = {"ad_warning"};
+    private static String[] tables = {"msg_read"};
     //table前缀
     private static String prefix = "t_";
 

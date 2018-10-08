@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IMsgService extends IService<Msg> {
 
-    String addMsg(String userId, String content, String pics);
+    String addMsg(String userId, String content, String pics, String companyIds);
 
+    String readMsg(String msgId, String userId);
 }

@@ -10,6 +10,8 @@
         <result column="lontitude" property="lontitude"/>
         <result column="latitude" property="latitude"/>
         <result column="serial_num" property="serialNum"/>
+        <result column="near_camera" property="nearCamera"/>
+        <result column="near_police" property="nearPolice"/>
         <result column="ad_type" property="adType"/>
         <result column="address" property="address"/>
         <result column="ad_spec" property="adSpec"/>
@@ -31,6 +33,8 @@
         <result column="latitude" property="latitude"/>
         <result column="serial_num" property="serialNum"/>
         <result column="ad_type" property="adType"/>
+        <result column="near_camera" property="nearCamera"/>
+        <result column="near_police" property="nearPolice"/>
         <result column="address" property="address"/>
         <result column="ad_spec" property="adSpec"/>
         <result column="ad_content" property="adContent"/>
@@ -146,5 +150,31 @@
         </where>
         group by ad.advertisement_id
         order by ad.create_time desc
+    </select>
+
+    <select id="adStatistics" resultType="Map">
+        SELECT
+        COUNT(1) as num,
+        <if test="type == 1">
+            ad_type
+        </if>
+        <if test="type !=1">
+            ad_spec
+        </if>
+        FROM
+        advertisement
+        <where>
+            <if test="companyId!=null and companyId!=''">
+                and company_id=#{companyId}
+            </if>
+            and `status` = '1'
+        </where>
+        GROUP BY
+        <if test="type==1">
+            ad_type
+        </if>
+        <if test="type !=1">
+            ad_spec
+        </if>
     </select>
 </mapper>

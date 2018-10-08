@@ -11,17 +11,16 @@ import com.hjh.entity.PicFile;
 import com.hjh.entity.TUser;
 import com.hjh.service.IAdvertisementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.yqh.util.common.EmptyUtils;
-import com.yqh.util.common.ResultInfoUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.EmptyUtils;
+import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import sun.invoke.empty.Empty;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -68,7 +67,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addAdvertisement(String userId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic, String address) {
+    public String addAdvertisement(String userId, String companyId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic, String address, String nearCamera, String nearPolice) {
         TUser tUser = new TUser();
         tUser.setUserId(userId);
         tUser = tUser.selectById();
@@ -77,11 +76,15 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         String id = UUID.randomUUID().toString();
         advertisement.setAdvertisementId(id);
         advertisement.setUserId(userId);
-        advertisement.setCompanyId(tUser.getCompanyId());
+        advertisement.setCompanyId(companyId);
         advertisement.setSerialNum(serialNum);
         advertisement.setLontitude(BigDecimal.valueOf(lontitude));
         advertisement.setLatitude(BigDecimal.valueOf(latitude));
         advertisement.setAdType(adType);
+        if (EmptyUtils.isNotEmpty(nearCamera))
+            advertisement.setNearCamera(nearCamera);
+        if (EmptyUtils.isNotEmpty(nearPolice))
+            advertisement.setNearPolice(nearPolice);
         advertisement.setAdSpec(adSpec);
         advertisement.setHasLeaderPortrait(hasLeaderPortrait);
         advertisement.setAdContent(adContent);
@@ -241,8 +244,8 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT);
         advertisement.updateById();
         if (EmptyUtils.isNotEmpty(designPic)) {
-        picFileDao.delete(new EntityWrapper<PicFile>().eq("busness_id", advertisementId)
-                .eq("type", Constant.PIC_DESIGN_PIC));
+            picFileDao.delete(new EntityWrapper<PicFile>().eq("busness_id", advertisementId)
+                    .eq("type", Constant.PIC_DESIGN_PIC));
             JSONArray jsonArray = JSONArray.fromObject(designPic);
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -256,6 +259,12 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             }
         }
         return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    public String adStatistics(String companyId, Integer type) {
+        List<Map<String, Object>> maps = advertisementDao.adStatistics(companyId,type);
+        return ResultInfoUtils.infoData(maps);
     }
 
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjh.dao.UserCompanyDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hjh.entity.UserCompany">
+        <id column="user_company_id" property="userCompanyId"/>
+        <result column="user_id" property="userId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_company_id AS userCompanyId, user_id AS userId, company_id AS companyId, status, create_time AS createTime, modify_time AS modifyTime
+    </sql>
+
+    <select id="selectUserCompany" resultType="Map">
+        select c.company_id,u.name, uc.user_company_id, c.company_name from user_company uc inner join company c on c.company_id=uc.company_id inner join t_user u on uc.user_id=u.user_id
+        <where>
+            <if test="userId != null and userId!=''">
+                and uc.user_id=#{userId}
+
+            </if>
+            <if test="companyId !=null and companyId!=''">
+                and uc.company_id=#{companyId}
+            </if>
+            <if test="keyWord !=null and keyWord!=''">
+                and c.company_name like concat('%',#{keyWord},'%')
+            </if>
+            and uc.status=1
+        </where>
+        order by c.company_name asc
+    </select>
+
+    <select id="selectUserCompanyName" resultType="Map">
+        select  c.company_name from user_company uc inner join company c on c.company_id=uc.company_id inner join t_user u on uc.user_id=u.user_id
+        <where>
+            <if test="userId != null and userId!=''">
+                and uc.user_id=#{userId}
+            </if>
+            and uc.status=1
+        </where>
+        order by c.company_name asc
+    </select>
+</mapper>

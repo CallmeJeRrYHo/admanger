@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public interface TUserDao extends BaseMapper<TUser> {
 
-    List<Map<String,Object>> getUserInfo(@Param("userId") String userId);
+    List<TUser> getUserInfo(@Param("userId") String userId);
 
-    List<Map<String, Object>> selectUsers(Page<TUser> tUserPage, @Param("companyId") String companyId, @Param("userType") Integer userType);
-    long selectUsersCount(@Param("companyId") String companyId, @Param("userType") Integer userType);
+    List<Map<String, Object>> selectUsers(Page<TUser> tUserPage, @Param("companyId") String companyId, @Param("userType") Integer userType, @Param("keyWord")String keyWord);
+    long selectUsersCount(@Param("companyId") String companyId, @Param("userType") Integer userType,@Param("keyWord") String keyWord);
 }

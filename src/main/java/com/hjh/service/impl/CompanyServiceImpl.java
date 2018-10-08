@@ -7,9 +7,9 @@ import com.hjh.dao.CompanyDao;
 import com.hjh.entity.TUser;
 import com.hjh.service.ICompanyService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.yqh.util.common.ResultInfoUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
     @Override
     public String addCompany(String userId, String companyName) {
         //用户是否为监管者
-        checkIsMonitor(userId);
+        checkIsAdmin(userId);
         Integer num = companyDao.selectCount(new EntityWrapper<Company>()
                 .eq("company_name", companyName)
                 .eq("status", Constant.STATUS_NORMAL));
@@ -45,6 +45,15 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         company.setStatus(Constant.STATUS_NORMAL);
         company.insert();
         return ResultInfoUtils.infoData();
+    }
+
+    private void checkIsAdmin(String userId) {
+        TUser tUser = new TUser();
+        tUser.setUserId(userId);
+        tUser = tUser.selectById();
+        if (3 != tUser.getUserType()) {
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "该用户不为管理員");
+        }
     }
 
     public void checkIsMonitor(String userId){

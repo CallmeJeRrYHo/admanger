@@ -24,4 +24,6 @@ public interface AdWarningDao extends BaseMapper<AdWarning> {
     long selectMyWarningCount(@Param("userId") String userId);
 
     AdWarningWithPic getWarningDetail(@Param("warningId")String warningId);
+
+    List<Map<String,Object>> adMonitor(@Param("companyId")String companyId, @Param("startDate")String startDate, @Param("endDate")String endDate);
 }

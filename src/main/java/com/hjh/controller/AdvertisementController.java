@@ -7,10 +7,10 @@ import com.hjh.dao.PicFileDao;
 import com.hjh.entity.PicFile;
 import com.hjh.service.IAdWarningService;
 import com.hjh.service.IAdvertisementService;
-import com.yqh.util.common.BaseController;
-import com.yqh.util.common.ResultInfoUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.BaseController;
+import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -113,9 +113,10 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/addAdvertisement")
-    public String addAdvertisement(String userId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address){
+    public String addAdvertisement(String userId,String companyId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,String nearCamera,String nearPolice){
         try{
             checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("公司",companyId);
             checkNecessaryParameter("序号",serialNum);
             checkNecessaryParameter("经度",lontitude);
             checkNecessaryParameter("纬度",latitude);
@@ -125,7 +126,7 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("广告内容",adContent);
             checkNecessaryParameter("图片",designPic);
 
-            return iAdvertisementService.addAdvertisement(userId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address);
+            return iAdvertisementService.addAdvertisement(userId,companyId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,nearCamera,nearPolice);
         }catch(Exception e){
             return handleError(e);
         }
@@ -205,4 +206,6 @@ public class AdvertisementController extends BaseController {
             return handleError(e);
         }
     }
+
+
 }

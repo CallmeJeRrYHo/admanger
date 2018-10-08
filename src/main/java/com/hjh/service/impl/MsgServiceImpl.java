@@ -1,19 +1,17 @@
 package com.hjh.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.hjh.constant.Constant;
-import com.hjh.entity.Msg;
+import com.hjh.entity.*;
 import com.hjh.dao.MsgDao;
-import com.hjh.entity.PicFile;
-import com.hjh.entity.TUser;
 import com.hjh.service.IMsgService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.yqh.util.common.EmptyUtils;
-import com.yqh.util.common.ResultInfoUtils;
-import com.yqh.util.common.YqhException;
-import com.yqh.util.common.enums.BaseMessageEnum;
+import com.hjh.utils.EmptyUtils;
+import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
+import com.hjh.utils.BaseMessageEnum;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +30,7 @@ import java.util.UUID;
 public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addMsg(String userId, String content, String pics) {
+    public String addMsg(String userId, String content, String pics, String companyIds) {
         TUser tUser=new TUser();
         tUser.setUserId(userId);
         tUser=tUser.selectById();
@@ -46,6 +44,15 @@ public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgServ
         String msgId = UUID.randomUUID().toString();
         msg.setMsgId(msgId);
         msg.insert();
+        String[] split = companyIds.split(",");
+        for (String s : split) {
+            MsgCompany msgCompany=new MsgCompany();
+            msgCompany.setMsgCompanyId(UUID.randomUUID().toString());
+            msgCompany.setCompanyId(s);
+            msgCompany.setMsgId(msgId);
+            msgCompany.setStatus(Constant.STATUS_NORMAL);
+            msgCompany.insert();
+        }
         if (EmptyUtils.isNotEmpty(pics)) {
             JSONArray jsonArray = JSONArray.fromObject(pics);
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -58,6 +65,20 @@ public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgServ
                 picFile.setType(Constant.PIC_MSG_PIC);
                 picFile.insert();
             }
+        }
+        return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    public String readMsg(String msgId, String userId) {
+        MsgRead msgRead=new MsgRead();
+        int i = msgRead.selectCount(new EntityWrapper().eq("msg_id", msgId)
+                .eq("user_id", userId));
+        if (i==0){
+            msgRead.setMsgReadId(UUID.randomUUID().toString());
+            msgRead.setUserId(userId);
+            msgRead.setMsgId(msgId);
+            msgRead.insert();
         }
         return ResultInfoUtils.infoData();
     }

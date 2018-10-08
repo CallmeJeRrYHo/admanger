@@ -102,4 +102,32 @@
             </if>
         </where>
     </select>
+
+    <select id="adMonitor" resultType="Map">
+        SELECT
+        COUNT(1) AS warning_num,
+        ad.address,
+        ad.serial_num,
+        aw.create_time
+        FROM
+        advertisement ad
+        LEFT JOIN ad_warning aw ON ad.advertisement_id = aw.advertisememt_id
+        <where>
+            <if test="companyId!=null and companyId !=''">
+
+                and ad.company_id = #{companyId}
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                AND aw.create_time &gt;= #{startDate}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND aw.create_time &lt;= #{endDate}
+            </if>
+
+            and aw.status =1
+            AND ad.`status` = 1
+        </where>
+        GROUP BY
+        ad.advertisement_id
+    </select>
 </mapper>

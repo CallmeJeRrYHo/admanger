@@ -46,6 +46,8 @@ public class Msg extends Model<Msg> {
 	private List<PicFile> picFiles;
 	@TableField(exist = false)
 	private String createUserName;
+	@TableField(exist = false)
+	private String readStatus;
 	@Override
 	protected Serializable pkVal() {
 		return this.msgId;

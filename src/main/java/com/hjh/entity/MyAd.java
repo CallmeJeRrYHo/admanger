@@ -92,7 +92,11 @@ public class MyAd {
 
     @TableField(exist = false)
     private List<PicFile> pics;
+    @TableField(exist = false)
 
+    private String nearCamera;
+    @TableField(exist = false)
+    private String nearPolice;
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -239,5 +243,21 @@ public class MyAd {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getNearCamera() {
+        return nearCamera;
+    }
+
+    public void setNearCamera(String nearCamera) {
+        this.nearCamera = nearCamera;
+    }
+
+    public String getNearPolice() {
+        return nearPolice;
+    }
+
+    public void setNearPolice(String nearPolice) {
+        this.nearPolice = nearPolice;
     }
 }

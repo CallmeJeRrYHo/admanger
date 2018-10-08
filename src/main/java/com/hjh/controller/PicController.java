@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.hjh.dao.TUserDao;
 import com.hjh.entity.TUser;
 import com.hjh.service.IPicFileService;
-import com.yqh.util.common.BaseController;
-import com.yqh.util.common.ResultInfoUtils;
+
+
+import com.hjh.utils.BaseController;
+import com.hjh.utils.ResultInfoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +26,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/pic")
-public class PicController extends BaseController{
+public class PicController extends BaseController {
     @Autowired
     IPicFileService iPicFileService;
     @Autowired
