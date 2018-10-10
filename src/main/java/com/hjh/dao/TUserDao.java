@@ -20,6 +20,6 @@ public interface TUserDao extends BaseMapper<TUser> {
 
     List<TUser> getUserInfo(@Param("userId") String userId);
 
-    List<Map<String, Object>> selectUsers(Page<TUser> tUserPage, @Param("companyId") String companyId, @Param("userType") Integer userType, @Param("keyWord")String keyWord);
-    long selectUsersCount(@Param("companyId") String companyId, @Param("userType") Integer userType,@Param("keyWord") String keyWord);
+    List<Map<String, Object>> selectUsers(Page<TUser> tUserPage, @Param("companyId") String companyId, @Param("userType") Integer userType, @Param("keyWord") String keyWord, @Param("supUserId")String supUserId);
+    long selectUsersCount(@Param("companyId") String companyId, @Param("userType") Integer userType,@Param("keyWord") String keyWord, @Param("supUserId")String supUserId);
 }

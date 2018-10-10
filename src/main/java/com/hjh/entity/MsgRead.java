@@ -22,6 +22,8 @@ public class MsgRead extends Model<MsgRead> {
 
     @TableId("msg_read_id")
 	private String msgReadId;
+	@TableField("warning_id")
+	private String warningId;
 	@TableField("msg_id")
 	private String msgId;
 	@TableField("user_id")
@@ -67,4 +69,11 @@ public class MsgRead extends Model<MsgRead> {
 		return this.msgReadId;
 	}
 
+	public String getWarningId() {
+		return warningId;
+	}
+
+	public void setWarningId(String warningId) {
+		this.warningId = warningId;
+	}
 }

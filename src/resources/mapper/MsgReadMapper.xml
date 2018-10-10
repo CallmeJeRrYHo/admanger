@@ -6,13 +6,14 @@
 	<resultMap id="BaseResultMap" type="com.hjh.entity.MsgRead">
 		<id column="msg_read_id" property="msgReadId" />
 		<result column="msg_id" property="msgId" />
+		<result column="warning_id" property="warningId" />
 		<result column="user_id" property="userId" />
 		<result column="create_time" property="createTime" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        msg_read_id AS msgReadId, msg_id AS msgId, user_id AS userId, create_time AS createTime
+        msg_read_id AS msgReadId, msg_id AS msgId, user_id AS userId, create_time AS createTime,warning_id as warningId
     </sql>
 
 </mapper>

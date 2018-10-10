@@ -20,11 +20,11 @@ public interface ITUserService extends IService<TUser> {
 
     String changePassword(String userId, String oldPassword, String newPassword);
 
-    String addUser(String name, String mobile, String superiorUserId, String companyId,  Integer userType, String password);
+    String addUser(String userId, String name, String mobile, String companyId, Integer userType, String password);
 
     String deleteUser(String userId, String deleteUserId);
 
-    String updateUser(String userId, String name, String mobile, String superiorUserId, String companyId, Integer userType, String password);
+    String updateUser(String userId, String name, String mobile, String companyId, Integer userType, String password);
 
     String addUserToCompany(String userId, String companyId);
 

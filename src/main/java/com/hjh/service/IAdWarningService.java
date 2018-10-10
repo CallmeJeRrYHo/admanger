@@ -18,4 +18,6 @@ public interface IAdWarningService extends IService<AdWarning> {
     String handleWarning(String content, String userId, String warningId);
 
     String auditWarningHandle(String userId, String warningId, Integer auditStatus);
+
+    void readWarning(String warningId, String userId);
 }

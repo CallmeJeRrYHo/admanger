@@ -24,6 +24,7 @@
         <result column="title" property="title"/>
         <result column="warning_status" property="warningStatus"/>
         <result column="status" property="status"/>
+        <result column="read_status" property="readStatus"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
         <result column="company_name" property="companyName"/>
@@ -46,13 +47,15 @@
         aw.*, c.company_name,
         u.`name` as create_user_name,
         ad.serial_num,
-        ad.address
+        ad.address,
+        IF(mr.msg_read_id is not null,1,0) as read_status
         FROM
         ad_warning aw
         LEFT JOIN company c ON aw.company_id = c.company_id
         LEFT JOIN t_user u ON u.user_id = aw.user_id
         LEFT JOIN t_user u2 ON u2.user_id = aw.handle_user_id
         LEFT JOIN advertisement ad ON ad.advertisement_id=aw.advertisememt_id
+        LEFT  JOIN msg_read mr ON  mr.warning_id=aw.warning_id
         <where>
             <if test="userId !=null and userId != ''">
                 (aw.handle_user_id = #{userId}

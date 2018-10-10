@@ -76,6 +76,9 @@
             <if test="keyWord!=null and keyWord!=''">
                 and u.name like CONCAT('%',#{keyWord},'%')
             </if>
+            <if test="supUserId != null and supUserId != ''">
+                and u.superior_id =#{supUserId}
+            </if>
         </where>
         group by u.user_id
         order by u.create_time desc
@@ -100,6 +103,9 @@
             <if test="keyWord!=null and keyWord!=''">
                 and u.name like CONCAT('%',#{keyWord},'%')
 
+            </if>
+            <if test="supUserId != null and supUserId != ''">
+                and u.superior_id =#{supUserId}
             </if>
         </where>
         group by u.user_id

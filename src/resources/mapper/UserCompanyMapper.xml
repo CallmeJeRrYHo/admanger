@@ -35,6 +35,26 @@
         order by c.company_name asc
     </select>
 
+
+    <select id="selectMyCompany" resultMap="com.hjh.dao.CompanyDao.BaseResultMap">
+        select c.* from user_company uc inner join company c on c.company_id=uc.company_id inner join t_user u on uc.user_id=u.user_id
+        <where>
+            <if test="userId != null and userId!=''">
+                and uc.user_id=#{userId}
+
+            </if>
+            <if test="companyId !=null and companyId!=''">
+                and uc.company_id=#{companyId}
+            </if>
+            <if test="keyWord !=null and keyWord!=''">
+                and c.company_name like concat('%',#{keyWord},'%')
+            </if>
+            and uc.status=1
+        </where>
+        order by c.company_name asc
+    </select>
+
+
     <select id="selectUserCompanyName" resultType="Map">
         select  c.company_name from user_company uc inner join company c on c.company_id=uc.company_id inner join t_user u on uc.user_id=u.user_id
         <where>

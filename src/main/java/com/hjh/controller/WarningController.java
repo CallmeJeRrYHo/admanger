@@ -50,8 +50,10 @@ public class WarningController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/getWarningDetail")
-    public String getWarningDetail(String warningId){
+    public String getWarningDetail(String userId,String warningId){
         try{
+            checkNecessaryParameter("userId",userId);
+
             checkNecessaryParameter("warningId",warningId);
             AdWarningWithPic warningDetail = adWarningDao.getWarningDetail(warningId);
             if (EmptyUtils.isEmpty(warningDetail)){
@@ -75,6 +77,7 @@ public class WarningController extends BaseController {
                 warningDetail.setIsShowHandleAudit(hasWaitAudit? 1 : 0);
             }
             warningDetail.setWarningHandles(warningHandles);
+            iAdWarningService.readWarning(warningId,userId);
             return ResultInfoUtils.infoData(warningDetail);
         }catch(Exception e){
             return handleError(e);

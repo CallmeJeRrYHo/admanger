@@ -94,42 +94,44 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addUser(String name, String mobile, String superiorUserId, String companyId,  Integer userType, String password) {
-//        if (1==userType) {
-//            TUser superior = new TUser();
-//            superior.setUserId(superiorUserId);
-//            superior = superior.selectById();
-//            if (2 != superior.getUserType()) {
-//                throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "上级不是监管者，请重新选择");
-//            }
-//            companyId=superior.getCompanyId();
-//        }
+    public String addUser(String userId, String name, String mobile , String companyId, Integer userType, String password) {
         Integer integer = tUserDao.selectCount(new EntityWrapper<TUser>().eq("status", 1)
                 .eq("mobile", mobile));
         if (integer>0){
             throw new YqhException(BaseMessageEnum.MOBILE_EXIST);
         }
+        TUser t=new TUser();
+        t.setUserId(userId);
+        t=t.selectById();
+        if (EmptyUtils.isEmpty(t)){
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"用户不存在");
+        }
+        String superiorUserId=null;
+        if (2==t.getUserType()){
+            superiorUserId=userId;
+        }
         TUser tUser=new TUser();
-        String userId = UUID.randomUUID().toString();
-        tUser.setUserId(userId);
+        String createUserId = UUID.randomUUID().toString();
+        tUser.setUserId(createUserId);
         tUser.setName(name);
         tUser.setMobile(mobile);
-        tUser.setSuperiorUserId(superiorUserId);
-        //tUser.setCompanyId(companyId);
+        if (EmptyUtils.isNotEmpty(superiorUserId)) {
+            tUser.setSuperiorUserId(superiorUserId);
+        }
         tUser.setPassword(password);
         tUser.setUserType(userType);
         tUser.setStatus(1);
         tUser.insert();
         String[] cs = companyId.split(",");
         for (String c : cs) {
-            addUserToCompany(userId,c);
+            addUserToCompany(createUserId,c);
         }
         return ResultInfoUtils.infoData();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String updateUser(String userId, String name, String mobile, String superiorUserId, String companyId, Integer userType, String password) {
+    public String updateUser(String userId, String name, String mobile,  String companyId, Integer userType, String password) {
 //        if (1==userType) {
 //            TUser superior = new TUser();
 //            superior.setUserId(superiorUserId);
@@ -143,7 +145,6 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         tUser.setUserId(userId);
         tUser.setName(name);
         tUser.setMobile(mobile);
-        tUser.setSuperiorUserId(superiorUserId);
         //tUser.setCompanyId(companyId);
         if (EmptyUtils.isNotEmpty(password)) {
             tUser.setPassword(password);
@@ -229,8 +230,8 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         TUser tUser=new TUser();
         tUser.setUserId(userId);
         tUser=tUser.selectById();
-        if (2!=tUser.getUserType()) {
-            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"操作用户不为监管者");
+        if (2!=tUser.getUserType()&&3!=tUser.getUserType()) {
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"操作用户不为监管者或者管理员");
         }
         TUser delUser=new TUser();
         delUser.setUserId(deleteUserId);

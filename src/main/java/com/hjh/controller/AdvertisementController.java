@@ -113,7 +113,7 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/addAdvertisement")
-    public String addAdvertisement(String userId,String companyId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,String nearCamera,String nearPolice){
+    public String addAdvertisement(String userId,String companyId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,String nearCamera,String nearPolice,String monitorUserId){
         try{
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("公司",companyId);
@@ -125,8 +125,8 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("序号",hasLeaderPortrait);
             checkNecessaryParameter("广告内容",adContent);
             checkNecessaryParameter("图片",designPic);
-
-            return iAdvertisementService.addAdvertisement(userId,companyId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,nearCamera,nearPolice);
+            checkNecessaryParameter("负责人",monitorUserId);
+            return iAdvertisementService.addAdvertisement(userId,companyId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,nearCamera,nearPolice,monitorUserId);
         }catch(Exception e){
             return handleError(e);
         }
@@ -155,11 +155,11 @@ public class AdvertisementController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateDesign")
-    public String updateDesign(String userId,String advertisementId,String serialNum,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,Double lontitude,Double latitude){
+    public String updateDesign(String userId,String advertisementId,String serialNum,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,Double lontitude,Double latitude,String monitorUserId){
         try{
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("advertisementId",advertisementId);
-            return iAdvertisementService.updateDesign(userId,advertisementId,serialNum,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,lontitude,latitude);
+            return iAdvertisementService.updateDesign(userId,advertisementId,serialNum,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,lontitude,latitude,monitorUserId);
         }catch(Exception e){
             return handleError(e);
         }
@@ -208,4 +208,15 @@ public class AdvertisementController extends BaseController {
     }
 
 
+    @ResponseBody
+    @RequestMapping("/updateAdvertisement")
+    public String updateAdvertisement(String userId,String advertisementId,String pic,String companyId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String address,String nearCamera,String nearPolice,String monitorUserId){
+        try{
+            checkNecessaryParameter("userId",userId);
+            checkNecessaryParameter("advertisementId",advertisementId);
+            return iAdvertisementService.updateAdvertisement(userId,advertisementId,pic,companyId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,address,nearCamera,nearPolice,monitorUserId);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
 }

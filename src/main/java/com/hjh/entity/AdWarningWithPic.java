@@ -76,4 +76,6 @@ public class AdWarningWithPic {
      */
     @TableField(exist = false)
     private Integer isShowHandleAudit;
+    @TableField(exist = false)
+    private String readStatus;
 }

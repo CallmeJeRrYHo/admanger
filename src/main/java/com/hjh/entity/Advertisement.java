@@ -54,6 +54,9 @@ public class Advertisement extends Model<Advertisement> {
      */
 	@TableField("serial_num")
 	private String serialNum;
+
+	@TableField("monitor_user_id")
+	private String monitorUserId;
     /**
      * 广告类型（样式） 1普通 2T型 3灯箱 4宣传栏
      */
@@ -256,4 +259,11 @@ public class Advertisement extends Model<Advertisement> {
 		return this.advertisementId;
 	}
 
+	public String getMonitorUserId() {
+		return monitorUserId;
+	}
+
+	public void setMonitorUserId(String monitorUserId) {
+		this.monitorUserId = monitorUserId;
+	}
 }

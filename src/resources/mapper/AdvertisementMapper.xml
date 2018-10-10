@@ -7,6 +7,7 @@
         <id column="advertisement_id" property="advertisementId"/>
         <result column="company_id" property="companyId"/>
         <result column="user_id" property="userId"/>
+        <result column="monitor_user_id" property="monitorUserId"/>
         <result column="lontitude" property="lontitude"/>
         <result column="latitude" property="latitude"/>
         <result column="serial_num" property="serialNum"/>
@@ -55,7 +56,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        advertisement_id AS advertisementId, company_id AS companyId, user_id AS userId, lontitude, latitude, serial_num AS serialNum, ad_type AS adType, address, ad_spec AS adSpec, ad_content AS adContent, has_leader_portrait AS hasLeaderPortrait, remark, audit_response AS auditResponse, ad_status AS adStatus, status, modify_time AS modifyTime, create_time AS createTime
+        advertisement_id AS advertisementId,monitor_user_id as monitorUserId, company_id AS companyId, user_id AS userId, lontitude, latitude, serial_num AS serialNum, ad_type AS adType, address, ad_spec AS adSpec, ad_content AS adContent, has_leader_portrait AS hasLeaderPortrait, remark, audit_response AS auditResponse, ad_status AS adStatus, status, modify_time AS modifyTime, create_time AS createTime
     </sql>
 
     <select id="selectAdList" resultType="Map">
@@ -71,7 +72,7 @@
         FROM
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
-        LEFT JOIN t_user u ON u.user_id = ad.user_id
+        LEFT JOIN t_user u ON u.user_id = ad.monitor_user_id
         left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id and pf.type=3)
         <where>
             ad.`status` = 1
@@ -88,7 +89,9 @@
                 AND ad.company_id=#{companyId}
             </if>
             <if test="keyWord != null and keyWord != ''">
-                AND c.company_name like CONCAT("%",#{keyWord},"%")
+                AND (c.company_name like CONCAT("%",#{keyWord},"%")
+                    or ad.address like CONCAT("%",#{keyWord},"%")
+                    or ad.serial_num like CONCAT("%",#{keyWord},"%"))
             </if>
         </where>
         group by ad.advertisement_id
@@ -104,7 +107,7 @@
         FROM
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
-        LEFT JOIN t_user u ON u.user_id = ad.user_id
+        LEFT JOIN t_user u ON u.user_id = ad.monitor_user_id
         <where>
             ad.`status` = 1
             and c.`status`=1
@@ -129,7 +132,7 @@
         FROM
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
-        LEFT JOIN t_user u ON u.user_id = ad.user_id
+        LEFT JOIN t_user u ON u.user_id = ad.monitor_user_id
         left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id AND pf.type=2 AND pf.`status`=1)
         <where>
             ad.`status` = 1

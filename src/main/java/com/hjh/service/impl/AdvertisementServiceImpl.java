@@ -67,7 +67,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
-    public String addAdvertisement(String userId, String companyId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic, String address, String nearCamera, String nearPolice) {
+    public String addAdvertisement(String userId, String companyId, String serialNum, Double lontitude, Double latitude, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String pic, String address, String nearCamera, String nearPolice,String monitorUserId) {
         TUser tUser = new TUser();
         tUser.setUserId(userId);
         tUser = tUser.selectById();
@@ -78,6 +78,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setUserId(userId);
         advertisement.setCompanyId(companyId);
         advertisement.setSerialNum(serialNum);
+        advertisement.setMonitorUserId(monitorUserId);
         advertisement.setLontitude(BigDecimal.valueOf(lontitude));
         advertisement.setLatitude(BigDecimal.valueOf(latitude));
         advertisement.setAdType(adType);
@@ -219,7 +220,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String updateDesign(String userId, String advertisementId, String serialNum, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String designPic, String address, Double lontitude, Double latitude) {
+    public String updateDesign(String userId, String advertisementId, String serialNum, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String designPic, String address, Double lontitude, Double latitude,String monitorUserId) {
         Advertisement advertisement = new Advertisement();
         advertisement.setAdvertisementId(advertisementId);
         advertisement = advertisement.selectById();
@@ -229,6 +230,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         if (Constant.AD_STATUS_DESIGN_NOT_PASS != advertisement.getAdStatus()) {
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "广告状态有误，请刷新");
         }
+        advertisement.setMonitorUserId(monitorUserId);
         advertisement.setSerialNum(serialNum);
         advertisement.setAdType(adType);
         advertisement.setAdSpec(adSpec);
@@ -265,6 +267,69 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
     public String adStatistics(String companyId, Integer type) {
         List<Map<String, Object>> maps = advertisementDao.adStatistics(companyId,type);
         return ResultInfoUtils.infoData(maps);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String updateAdvertisement(String userId, String advertisementId, String pic, String companyId,
+                                      String serialNum, Double lontitude, Double latitude, Integer adType,
+                                      Integer adSpec, Integer hasLeaderPortrait, String adContent, String address,
+                                      String nearCamera, String nearPolice, String monitorUserId) {
+        Advertisement advertisement=new Advertisement();
+        advertisement.setAdvertisementId(advertisementId);
+        if (EmptyUtils.isNotEmpty(companyId)) {
+            advertisement.setCompanyId(companyId);
+        }
+        if (EmptyUtils.isNotEmpty(serialNum)) {
+            advertisement.setSerialNum(serialNum);
+        }
+        if (EmptyUtils.isNotEmpty(lontitude)) {
+            advertisement.setLontitude(BigDecimal.valueOf(lontitude));
+        }
+        if (EmptyUtils.isNotEmpty(latitude)) {
+            advertisement.setLatitude(BigDecimal.valueOf(latitude));
+        }
+        if (EmptyUtils.isNotEmpty(adType)) {
+            advertisement.setAdType(adType);
+        }
+        if (EmptyUtils.isNotEmpty(adSpec)) {
+            advertisement.setAdSpec(adSpec);
+        }
+        if (EmptyUtils.isNotEmpty(hasLeaderPortrait)) {
+            advertisement.setHasLeaderPortrait(hasLeaderPortrait);
+        }
+        if (EmptyUtils.isNotEmpty(adContent)) {
+            advertisement.setAdContent(adContent);
+        }
+        if (EmptyUtils.isNotEmpty(address)) {
+            advertisement.setAddress(address);
+        }
+        if (EmptyUtils.isNotEmpty(nearCamera)) {
+            advertisement.setNearCamera(nearCamera);
+        }
+        if (EmptyUtils.isNotEmpty(nearPolice)) {
+            advertisement.setNearPolice(nearPolice);
+        }
+        if (EmptyUtils.isNotEmpty(monitorUserId)) {
+            advertisement.setMonitorUserId(monitorUserId);
+        }
+        advertisement.updateById();
+        if (EmptyUtils.isNotEmpty(pic)) {
+            picFileDao.delete(new EntityWrapper<PicFile>().eq("busness_id", advertisementId)
+                    .eq("type", Constant.PIC_DESIGN_PIC));
+            JSONArray jsonArray = JSONArray.fromObject(pic);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                PicFile picFile = new PicFile();
+                picFile.setPicId(jsonObject.getString("pic_id"));
+                picFile.setPath(jsonObject.getString("path"));
+                picFile.setType(Constant.PIC_LIVE_VIEW_PIC);
+                picFile.setStatus(Constant.STATUS_NORMAL);
+                picFile.setBusnessId(advertisementId);
+                picFile.insert();
+            }
+        }
+        return ResultInfoUtils.infoData();
     }
 
 

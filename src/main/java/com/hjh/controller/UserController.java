@@ -131,15 +131,8 @@ public class UserController extends MyBaseController {
     @ResponseBody
     public String selectCompany(@RequestParam(defaultValue = "1") Integer index, @RequestParam(defaultValue = "10") Integer pageSize,String keyWord) {
         try {
-            Company company = new Company();
-            Wrapper<Company> wrapper = new EntityWrapper<Company>()
-                    .eq("status", Constant.STATUS_NORMAL)
-                    .orderBy("create_time", false);
-            if (EmptyUtils.isNotEmpty(keyWord)){
-                wrapper=wrapper.like("company_name","%"+keyWord+"%");
-            }
-            Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), wrapper);
-            return ResultInfoUtils.infoData(status.getRecords(), status.getTotal());
+
+            return iCompanyService.selectCompany(index,pageSize,keyWord);
         } catch (Exception e) {
             return handleError(e);
         }
@@ -172,18 +165,15 @@ public class UserController extends MyBaseController {
 
     @RequestMapping("/addUser")
     @ResponseBody
-    public String addUser(String name, String mobile, String superiorUserId, String companyId, Integer userType, String password) {
+    public String addUser(String userId,String name, String mobile,String companyId, Integer userType, String password) {
         try {
+            checkNecessaryParameter("userId", userId);
             checkNecessaryParameter("名字", name);
             checkNecessaryParameter("手机号", mobile);
             checkNecessaryParameter("用户类型", userType);
-//            if (1 == userType) {
-//                checkNecessaryParameter("上级", superiorUserId);
-//            } else {
-                checkNecessaryParameter("公司", companyId);
-//            }
+            checkNecessaryParameter("公司", companyId);
             checkNecessaryParameter("密码", password);
-            return itUserService.addUser(name, mobile, superiorUserId, companyId, userType, password);
+            return itUserService.addUser(userId,name, mobile, companyId, userType, password);
         } catch (Exception e) {
             return handleError(e);
         }
@@ -192,10 +182,10 @@ public class UserController extends MyBaseController {
 
     @RequestMapping("/updateUser")
     @ResponseBody
-    public String updateUser(String userId, String name, String mobile, String superiorUserId, String companyId, Integer userType, String password) {
+    public String updateUser(String userId, String name, String mobile,  String companyId, Integer userType, String password) {
         try {
             checkNecessaryParameter("userId", userId);
-            return itUserService.updateUser(userId, name, mobile, superiorUserId, companyId, userType, password);
+            return itUserService.updateUser(userId, name, mobile,  companyId, userType, password);
         } catch (Exception e) {
             return handleError(e);
         }
@@ -215,10 +205,21 @@ public class UserController extends MyBaseController {
 
     @RequestMapping("/selectUsers")
     @ResponseBody
-    public String selectUsers(String keyWord,String companyId, Integer userType, @RequestParam(defaultValue = "1") Integer index, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public String selectUsers(String userId,String keyWord,String companyId, Integer userType, @RequestParam(defaultValue = "1") Integer index, @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
-            List<Map<String, Object>> users = tUserDao.selectUsers(new Page<TUser>(index, pageSize), companyId, userType,keyWord);
-            long l = tUserDao.selectUsersCount(companyId, userType,keyWord);
+            checkNecessaryParameter("userId",userId);
+            TUser tUser=new TUser();
+            tUser.setUserId(userId);
+            tUser=tUser.selectById();
+            if (EmptyUtils.isEmpty(tUser)){
+                throw new YqhException(BaseMessageEnum.USER_NOT_EXIST);
+            }
+            String supUserId=null;
+            if (2==tUser.getUserType()){
+                supUserId=userId;
+            }
+            List<Map<String, Object>> users = tUserDao.selectUsers(new Page<TUser>(index, pageSize), companyId, userType,keyWord,supUserId);
+            long l = tUserDao.selectUsersCount(companyId, userType,keyWord,supUserId);
             return ResultInfoUtils.infoData(users, l);
         } catch (Exception e) {
             return handleError(e);
@@ -271,6 +272,19 @@ public class UserController extends MyBaseController {
             List<Map<String, Object>> maps = adWarningDao.adMonitor(companyId, startDate, endDate);
             return ResultInfoUtils.infoData(maps);
         } catch (Exception e) {
+            return handleError(e);
+        }
+    }
+
+
+    @RequestMapping("/selectMyCompany")
+    @ResponseBody
+    public String selectMyCompany(@RequestParam(defaultValue = "1") Integer index, @RequestParam(defaultValue = "10") Integer pageSize,String userId, String companyId, String keyWord){
+        try{
+            checkNecessaryParameter("userId",userId);
+
+            return iCompanyService.selectMyCompany(index,pageSize,userId,companyId,keyWord);
+        }catch(Exception e){
             return handleError(e);
         }
     }

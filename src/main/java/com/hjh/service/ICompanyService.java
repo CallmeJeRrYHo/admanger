@@ -18,4 +18,8 @@ public interface ICompanyService extends IService<Company> {
     String updateCompany(String userId, String companyId, String companyName);
 
     String deleteCompany(String userId, String companyId);
+
+    String selectMyCompany(Integer index, Integer pageSize, String userId, String companyId, String keyWord);
+
+    String  selectCompany(Integer index, Integer pageSize, String keyWord);
 }

@@ -101,7 +101,17 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
         warningHandle.setStatus(Constant.STATUS_NORMAL);
         warningHandle.setWarningId(warningId);
         warningHandle.insert();
+        setWarningUnRead(warningId);
         return ResultInfoUtils.infoData();
+    }
+
+    private void setWarningUnRead(String warningId) {
+        if (EmptyUtils.isEmpty(warningId)){
+            return;
+        }
+        MsgRead msgRead=new MsgRead();
+        boolean warning_id = msgRead.delete(new EntityWrapper()
+                .eq("warning_id", warningId));
     }
 
     @Override
@@ -133,6 +143,22 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
             warningHandle.setHandleStatus(Constant.HANDLE_STATUS_NOT_PASS);
             warningHandle.updateById();
         }
+        setWarningUnRead(warningId);
         return ResultInfoUtils.infoData();
+    }
+
+    @Override
+    public void readWarning(String warningId, String userId) {
+        MsgRead msgRead=new MsgRead();
+        msgRead=msgRead.selectOne(new EntityWrapper()
+        .eq("warning_id",warningId)
+        .eq("user_id",userId));
+        if (EmptyUtils.isEmpty(msgRead)){
+            msgRead=new MsgRead();
+            msgRead.setMsgReadId(UUID.randomUUID().toString());
+            msgRead.setWarningId(warningId);
+            msgRead.setUserId(userId);
+            msgRead.insert();
+        }
     }
 }
