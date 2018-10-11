@@ -95,7 +95,7 @@
             AND u.`status` =1
             and c.`status` =1
             <if test="companyId != null and companyId!=''">
-                and u.company_id=#{companyId}
+                and uc.company_id=#{companyId}
             </if>
             <if test="userType !=null">
                 and u.user_type=#{userType}
