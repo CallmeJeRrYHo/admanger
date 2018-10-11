@@ -316,7 +316,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.updateById();
         if (EmptyUtils.isNotEmpty(pic)) {
             picFileDao.delete(new EntityWrapper<PicFile>().eq("busness_id", advertisementId)
-                    .eq("type", Constant.PIC_DESIGN_PIC));
+                    .eq("type", Constant.PIC_LIVE_VIEW_PIC));
             JSONArray jsonArray = JSONArray.fromObject(pic);
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);

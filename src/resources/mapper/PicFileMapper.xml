@@ -22,6 +22,9 @@
 		SELECT * FROM pic_file WHERE busness_id=#{msg_id} and type=5 and `status`=1;
 	</select>
 
+	<select id="selectLiveViewPicForAd" resultType="Map">
+		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=3) and `status`=1;
+	</select>
 	<select id="selectDesignPicForAd" resultType="Map">
 		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=2) and `status`=1;
 	</select>

@@ -1,6 +1,7 @@
 package com.hjh.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.constant.Constant;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.dao.PicFileDao;
@@ -38,10 +39,10 @@ public class AdvertisementController extends BaseController {
     PicFileDao picFileDao;
     @ResponseBody
     @RequestMapping("/selectAdList")
-    public String selectAdList(String companyId, Integer adType, Integer adSpec, String keyWord, @RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize){
+    public String selectAdList(String companyId, Integer adType, Integer adSpec, String keyWord, @RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize,Double lon,Double lat){
         try{
             // TODO: 2018/9/12 dao层添加index
-            List<Map<String, Object>> maps = advertisementDao.selectAdList(companyId, adType, adSpec, keyWord, index, pageSize);
+            List<Map<String, Object>> maps = advertisementDao.selectAdList(new Page<Map<String, Object>>(index,pageSize),companyId, adType, adSpec, keyWord, lon,lat);
             return ResultInfoUtils.infoData(maps);
         }catch(Exception e){
             return handleError(e);
@@ -55,12 +56,7 @@ public class AdvertisementController extends BaseController {
             checkNecessaryParameter("advertisementId",advertisementId);
             List<Map<String, Object>> adDetail = advertisementDao.getAdDetail(advertisementId);
             PicFile picFile=new PicFile();
-            List<Map<String, Object>> list = picFileDao.selectMaps(new EntityWrapper().eq("busness_id", advertisementId)
-                    .eq("status", Constant.STATUS_NORMAL)
-                    .eq("type", Constant.PIC_LIVE_VIEW_PIC));
-//            List<PicFile> designPic = picFile.selectList(new EntityWrapper().eq("busness_id", advertisementId)
-//                    .eq("status", Constant.STATUS_NORMAL)
-//                    .eq("type", Constant.PIC_DESIGN_PIC));
+            List<Map<String, Object>> list = picFileDao.selectLiveViewPicForAd(advertisementId);
             List<Map<String, Object>> maps = picFileDao.selectDesignPicForAd(advertisementId);
             if (adDetail.size()<1){
                 throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"广告id有误");
