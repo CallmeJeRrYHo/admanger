@@ -23,7 +23,7 @@
 	</select>
 
 	<select id="selectLiveViewPicForAd" resultType="Map">
-		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=3) and `status`=1;
+		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=3) and `status`=1 order by is_first desc;
 	</select>
 	<select id="selectDesignPicForAd" resultType="Map">
 		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=2) and `status`=1;

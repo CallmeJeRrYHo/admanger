@@ -71,7 +71,6 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         TUser tUser = new TUser();
         tUser.setUserId(userId);
         tUser = tUser.selectById();
-
         Advertisement advertisement = new Advertisement();
         String id = UUID.randomUUID().toString();
         advertisement.setAdvertisementId(id);
@@ -148,10 +147,20 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT_LIVE_VIEW);
         advertisement.updateById();
         JSONArray jsonArray = JSONArray.fromObject(pic);
+        boolean isFirstSet=false;
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             PicFile picFile = new PicFile();
             picFile.setPicId(jsonObject.getString("pic_id"));
+            if (jsonObject.has("is_first")&&!isFirstSet) {
+                picFile.setIs_first(jsonObject.getInt("is_first"));
+                if (1==jsonObject.getInt("is_first")) {
+                    isFirstSet = true;
+                }
+            }else {
+                picFile.setIs_first(0);
+
+            }
             picFile.setPath(jsonObject.getString("path"));
             picFile.setType(Constant.PIC_LIVE_VIEW_PIC);
             picFile.setStatus(Constant.STATUS_NORMAL);
@@ -314,6 +323,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             advertisement.setMonitorUserId(monitorUserId);
         }
         advertisement.updateById();
+        boolean isFirstSet=false;
         if (EmptyUtils.isNotEmpty(pic)) {
             picFileDao.delete(new EntityWrapper<PicFile>().eq("busness_id", advertisementId)
                     .eq("type", Constant.PIC_LIVE_VIEW_PIC));
@@ -322,6 +332,14 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 PicFile picFile = new PicFile();
                 picFile.setPicId(jsonObject.getString("pic_id"));
+                if (jsonObject.has("is_first")&&!isFirstSet) {
+                    picFile.setIs_first(jsonObject.getInt("is_first"));
+                    if (1==jsonObject.getInt("is_first")) {
+                        isFirstSet = true;
+                    }
+                }else {
+                    picFile.setIs_first(0);
+                }
                 picFile.setPath(jsonObject.getString("path"));
                 picFile.setType(Constant.PIC_LIVE_VIEW_PIC);
                 picFile.setStatus(Constant.STATUS_NORMAL);

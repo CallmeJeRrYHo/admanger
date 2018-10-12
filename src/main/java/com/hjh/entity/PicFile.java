@@ -45,8 +45,8 @@ public class PicFile extends Model<PicFile> {
 	private Date createTime;
 	@TableField("modify_time")
 	private Date modifyTime;
-
-
+	@TableField("is_first")
+	private Integer is_first;
 	@Override
 	protected Serializable pkVal() {
 		return this.picId;

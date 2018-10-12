@@ -66,6 +66,7 @@
         ad.lontitude,
         ad.latitude,
         ad.address,
+        ad.ad_content,
         u.`name`,
         c.company_name,
         pf.path
@@ -78,7 +79,7 @@
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
         LEFT JOIN t_user u ON u.user_id = ad.monitor_user_id
-        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id and pf.type=3)
+        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id and pf.type=3 and is_first=1)
         <where>
             ad.`status` = 1
             and c.`status`=1
@@ -133,6 +134,7 @@
         ad.address,
         ad.lontitude,
         ad.latitude,
+        ad.ad_content,
         ad.ad_status,
         u.`name`,
         c.company_name,
