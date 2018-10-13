@@ -58,8 +58,8 @@
         LEFT  JOIN msg_read mr ON  mr.warning_id=aw.warning_id
         <where>
             <if test="userId !=null and userId != ''">
-                (aw.handle_user_id = #{userId}
-                OR u2.superior_id = #{userId})
+                (aw.user_id=#{userId} or aw.handle_user_id = #{userId}
+                OR ad.monitor_user_id= #{userId})
             </if>
             and aw.`status`=1
         </where>
