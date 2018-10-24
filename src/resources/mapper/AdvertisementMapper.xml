@@ -157,7 +157,10 @@
             </if>
             <if test="userId != null and userId != ''">
                 and (ad.user_id=#{userId}
-                OR uc.user_id=#{userId})
+                <if test="isOnlyMy ==null or isOnlyMy==''">
+                    OR uc.user_id=#{userId}
+                </if>
+                )
             </if>
             <if test="adStatus !=null and adStatus!=''">
                 and ad.ad_status=#{adStatus}

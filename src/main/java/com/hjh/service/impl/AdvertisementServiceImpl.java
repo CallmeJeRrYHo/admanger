@@ -45,7 +45,17 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     public String selectMyAd(String userId, Integer adType, Integer adSpec, Integer adStatus, Integer index, Integer pageSize) {
-        List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec, adStatus);
+        TUser user=new TUser();
+        user.setUserId(userId);
+        user=user.selectById();
+        if (EmptyUtils.isEmpty(user)){
+            throw new YqhException(BaseMessageEnum.USER_NOT_EXIST);
+        }
+        String isOnlyMy=null;
+        if (1==user.getUserType()){
+            isOnlyMy="1";
+        }
+        List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec, adStatus,isOnlyMy);
         return ResultInfoUtils.infoData(myAds);
     }
 
@@ -229,7 +239,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String updateDesign(String userId, String advertisementId, String serialNum, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String designPic, String address, Double lontitude, Double latitude,String monitorUserId) {
+    public String updateDesign(String userId, String advertisementId, String serialNum, Integer adType, Integer adSpec, Integer hasLeaderPortrait, String adContent, String designPic, String address, Double lontitude, Double latitude, String monitorUserId, String nearCamera, String nearPolice) {
         Advertisement advertisement = new Advertisement();
         advertisement.setAdvertisementId(advertisementId);
         advertisement = advertisement.selectById();
@@ -252,6 +262,10 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             advertisement.setLontitude(BigDecimal.valueOf(lontitude));
         if (EmptyUtils.isNotEmpty(latitude))
             advertisement.setLatitude(BigDecimal.valueOf(latitude));
+        if (EmptyUtils.isNotEmpty(nearPolice))
+            advertisement.setNearPolice(nearPolice);
+        if (EmptyUtils.isNotEmpty(nearCamera))
+            advertisement.setNearPolice(nearCamera);
         advertisement.setAdStatus(Constant.AD_STATUS_WAIT_AUDIT);
         advertisement.updateById();
         if (EmptyUtils.isNotEmpty(designPic)) {

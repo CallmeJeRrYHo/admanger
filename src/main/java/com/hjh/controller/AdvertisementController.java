@@ -89,7 +89,7 @@ public class AdvertisementController extends BaseController {
         try{
         checkNecessaryParameter("userId",userId);
 
-            return iAdvertisementService.selectMyAd(userId,adType,adSpec,adStatus,index,pageSize);
+        return iAdvertisementService.selectMyAd(userId,adType,adSpec,adStatus,index,pageSize);
         }catch(Exception e){
             return handleError(e);
         }
@@ -151,11 +151,11 @@ public class AdvertisementController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateDesign")
-    public String updateDesign(String userId,String advertisementId,String serialNum,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,Double lontitude,Double latitude,String monitorUserId){
+    public String updateDesign(String userId,String advertisementId,String serialNum,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,Double lontitude,Double latitude,String monitorUserId,String nearCamera,String nearPolice){
         try{
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("advertisementId",advertisementId);
-            return iAdvertisementService.updateDesign(userId,advertisementId,serialNum,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,lontitude,latitude,monitorUserId);
+            return iAdvertisementService.updateDesign(userId,advertisementId,serialNum,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,lontitude,latitude,monitorUserId,nearCamera,nearPolice);
         }catch(Exception e){
             return handleError(e);
         }
