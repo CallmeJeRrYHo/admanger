@@ -105,6 +105,7 @@
         <if test="lon!=null">
             juli ASC,
         </if>
+        serial_num asc,
         ad.create_time desc
     </select>
 

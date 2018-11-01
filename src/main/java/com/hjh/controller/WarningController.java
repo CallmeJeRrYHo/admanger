@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.hjh.constant.Constant;
 import com.hjh.dao.AdWarningDao;
+import com.hjh.dao.PicFileDao;
 import com.hjh.dao.WarningHandleDao;
 import com.hjh.entity.AdWarningWithPic;
+import com.hjh.entity.PicFile;
 import com.hjh.entity.WarningHandle;
 import com.hjh.service.IAdWarningService;
 import com.hjh.utils.BaseController;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author： Jerry
@@ -32,7 +35,8 @@ public class WarningController extends BaseController {
     AdWarningDao adWarningDao;
     @Autowired
     WarningHandleDao warningHandleDao;
-
+    @Autowired
+    PicFileDao picFileDao;
     @Autowired
     IAdWarningService iAdWarningService;
     @ResponseBody
@@ -63,6 +67,13 @@ public class WarningController extends BaseController {
                     .eq("warning_id", warningId)
                     .eq("status", Constant.STATUS_NORMAL)
                     .orderBy("create_time", true));
+            for (WarningHandle warningHandle : warningHandles) {
+                List<PicFile> maps = picFileDao.selectList(new EntityWrapper<PicFile>()
+                        .eq("busness_id", warningHandle.getHandleId())
+                        .eq("status", Constant.STATUS_NORMAL)
+                        .eq("type", Constant.PIC_WARING_HANDLE_PIC));
+                warningHandle.setPics(maps);
+            }
             Integer waitAuditNum = warningHandleDao.selectCount(new EntityWrapper<WarningHandle>()
                     .eq("warning_id", warningId)
                     .eq("status", Constant.STATUS_NORMAL)
@@ -85,13 +96,13 @@ public class WarningController extends BaseController {
     }
     @ResponseBody
     @RequestMapping("/handleWarning")
-    public String handleWarning(String content,String userId,String warningId){
+    public String handleWarning(String content,String userId,String warningId,String  pics){
         try{
             checkNecessaryParameter("内容",content);
             checkNecessaryParameter("userId",userId);
             checkNecessaryParameter("warningId",warningId);
 
-            return iAdWarningService.handleWarning(content,userId,warningId);
+            return iAdWarningService.handleWarning(content,userId,warningId,pics);
         }catch(Exception e){
             return handleError(e);
         }

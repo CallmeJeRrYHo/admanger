@@ -1,8 +1,6 @@
 package com.hjh.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.google.gson.JsonArray;
 import com.hjh.constant.Constant;
 import com.hjh.dao.WarningHandleDao;
 import com.hjh.entity.*;
@@ -75,7 +73,7 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
     }
 
     @Override
-    public String handleWarning(String content, String userId, String warningId) {
+    public String handleWarning(String content, String userId, String warningId, String pics) {
         //是否存在未审核的处理
         Integer num = warningHandleDao.selectCount(new EntityWrapper<WarningHandle>()
                 .eq("warning_id", warningId)
@@ -95,12 +93,26 @@ public class AdWarningServiceImpl extends ServiceImpl<AdWarningDao, AdWarning> i
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"报警已完成");
         }
         WarningHandle warningHandle = new WarningHandle();
-        warningHandle.setHandleId(UUID.randomUUID().toString());
+        String handleId = UUID.randomUUID().toString();
+        warningHandle.setHandleId(handleId);
         warningHandle.setContent(content);
         warningHandle.setHandleStatus(Constant.HANDLE_STATUS_WAIT);
         warningHandle.setStatus(Constant.STATUS_NORMAL);
         warningHandle.setWarningId(warningId);
         warningHandle.insert();
+        if (EmptyUtils.isNotEmpty(pics)){
+            JSONArray jsonArray = JSONArray.fromObject(pics);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject x = jsonArray.getJSONObject(i);
+                PicFile picFile=new PicFile();
+                picFile.setPicId(UUID.randomUUID().toString());
+                picFile.setPath(x.getString("path"));
+                picFile.setType(Constant.PIC_WARING_HANDLE_PIC);
+                picFile.setBusnessId(handleId);
+                picFile.setStatus(Constant.STATUS_NORMAL);
+                picFile.insert();
+            }
+        }
         setWarningUnRead(warningId);
         return ResultInfoUtils.infoData();
     }

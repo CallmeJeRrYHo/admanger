@@ -62,11 +62,9 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
     @Override
     public String deleteAd(String userId, String advertisementId) {
         Advertisement advertisement = new Advertisement();
-        advertisement.setUserId(userId);
         advertisement.setAdvertisementId(advertisementId);
         advertisement.setStatus(Constant.STATUS_DELETE);
         Integer update = advertisementDao.update(advertisement, new EntityWrapper<Advertisement>()
-                .eq("user_id", userId)
                 .eq("advertisement_id", advertisementId)
                 .eq("status", Constant.STATUS_NORMAL));
         if (update < 1) {

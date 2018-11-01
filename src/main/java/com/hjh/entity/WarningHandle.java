@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -57,6 +59,15 @@ public class WarningHandle extends Model<WarningHandle> {
 	@TableField("modify_time")
 	private Date modifyTime;
 
+	public List<PicFile> getPics() {
+		return pics;
+	}
+
+	public void setPics(List<PicFile> pics) {
+		this.pics = pics;
+	}
+	@TableField(exist = false)
+	private List<PicFile> pics;
 
 	public String getHandleId() {
 		return handleId;
