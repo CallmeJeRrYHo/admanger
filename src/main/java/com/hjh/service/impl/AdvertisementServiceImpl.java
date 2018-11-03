@@ -55,6 +55,9 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         if (1==user.getUserType()){
             isOnlyMy="1";
         }
+        if (3==user.getUserType()){
+            userId=null;
+        }
         List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec, adStatus,isOnlyMy);
         return ResultInfoUtils.infoData(myAds);
     }
