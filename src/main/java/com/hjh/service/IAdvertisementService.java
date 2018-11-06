@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IAdvertisementService extends IService<Advertisement> {
 
-    String selectMyAd(String userId, Integer adType, Integer adSpec,Integer adStatus, Integer index, Integer pageSize);
+    String selectMyAd(String userId, Integer adType, Integer adSpec,Integer adStatus, Integer index, Integer pageSize,String key);
 
     String deleteAd(String userId, String advertisementId);
 

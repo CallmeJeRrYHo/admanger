@@ -85,11 +85,11 @@ public class AdvertisementController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/selectMyAd")
-    public String selectMyAd(String userId,Integer adType,Integer adSpec,Integer adStatus,@RequestParam(defaultValue = "1") Integer index,@RequestParam(defaultValue = "10") Integer pageSize){
+    public String selectMyAd(String key,String userId,Integer adType,Integer adSpec,Integer adStatus,@RequestParam(defaultValue = "1") Integer index,@RequestParam(defaultValue = "10") Integer pageSize){
         try{
         checkNecessaryParameter("userId",userId);
 
-        return iAdvertisementService.selectMyAd(userId,adType,adSpec,adStatus,index,pageSize);
+        return iAdvertisementService.selectMyAd(userId,adType,adSpec,adStatus,index,pageSize,key);
         }catch(Exception e){
             return handleError(e);
         }

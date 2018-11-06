@@ -37,6 +37,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
     CompanyDao companyDao;
     @Autowired
     UserCompanyDao userCompanyDao;
+
     @Override
     public String addCompany(String userId, String companyName) {
         //用户是否为监管者
@@ -64,18 +65,19 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         }
     }
 
-    public void checkIsMonitor(String userId){
+    public void checkIsMonitor(String userId) {
         TUser tUser = new TUser();
         tUser.setUserId(userId);
         tUser = tUser.selectById();
-        if (2 != tUser.getUserType()&&3!= tUser.getUserType()) {
+        if (2 != tUser.getUserType() && 3 != tUser.getUserType()) {
             throw new YqhException(BaseMessageEnum.UNKNOW_ERROR, "该用户不为监管者");
         }
     }
+
     @Override
     public String updateCompany(String userId, String companyId, String companyName) {
         checkIsMonitor(userId);
-        Company company=new Company();
+        Company company = new Company();
         company.setCompanyId(companyId);
         company.setCompanyName(companyName);
         company.updateById();
@@ -85,24 +87,30 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
     @Override
     public String deleteCompany(String userId, String companyId) {
         checkIsMonitor(userId);
-        Company company=new Company();
-        company.setCompanyId(companyId);
-        company.setStatus(Constant.STATUS_DELETE);
-        company.updateById();
+        String[] split = companyId.split(",");
+        for (String s : split) {
+            if (EmptyUtils.isEmpty(s))
+                continue;
+            Company company = new Company();
+            company.setCompanyId(s);
+            company.setStatus(Constant.STATUS_DELETE);
+            company.updateById();
+
+        }
         return ResultInfoUtils.infoData();
     }
 
     @Override
     public String selectMyCompany(Integer index, Integer pageSize, String userId, String companyId, String keyWord) {
-        TUser tUser=new TUser();
+        TUser tUser = new TUser();
         tUser.setUserId(userId);
-        tUser=tUser.selectById();
-        if (EmptyUtils.isEmpty(tUser)){
+        tUser = tUser.selectById();
+        if (EmptyUtils.isEmpty(tUser)) {
             throw new YqhException(BaseMessageEnum.USER_NOT_EXIST);
         }
-        if (3==tUser.getUserType()){
-            return selectCompany(index,pageSize,keyWord);
-        }else {
+        if (3 == tUser.getUserType()) {
+            return selectCompany(index, pageSize, keyWord);
+        } else {
             List<Company> companies = userCompanyDao.selectMyCompany(userId, companyId, keyWord);
             return ResultInfoUtils.infoData(companies);
         }
@@ -114,8 +122,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyDao, Company> impleme
         Wrapper<Company> wrapper = new EntityWrapper<Company>()
                 .eq("status", Constant.STATUS_NORMAL)
                 .orderBy("create_time", false);
-        if (EmptyUtils.isNotEmpty(keyWord)){
-            wrapper=wrapper.like("company_name","%"+keyWord+"%");
+        if (EmptyUtils.isNotEmpty(keyWord)) {
+            wrapper = wrapper.like("company_name", "%" + keyWord + "%");
         }
         Page<Company> status = company.selectPage(new Page<Company>(index, pageSize), wrapper);
         return ResultInfoUtils.infoData(status.getRecords(), status.getTotal());

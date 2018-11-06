@@ -105,7 +105,7 @@
         <if test="lon!=null">
             juli ASC,
         </if>
-        serial_num asc,
+        serial_num+1 asc,
         ad.create_time desc
     </select>
 
@@ -150,6 +150,10 @@
         <where>
             ad.`status` = 1
             and c.`status`=1
+            <if test="key!=null and key != ''">
+                and (ad.address like concat('%',#{key},'%')
+                    or ad.serial_num like concat('%',#{key},'%'))
+            </if>
             <if test="adSpec != null">
                 AND ad.ad_spec=#{adSpec}
             </if>
@@ -168,7 +172,7 @@
             </if>
         </where>
         group by ad.advertisement_id
-        order by ad.create_time desc
+        order by serial_num+1 asc,ad.create_time desc
     </select>
 
     <select id="adStatistics" resultType="Map">

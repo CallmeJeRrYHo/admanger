@@ -44,7 +44,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
     PicFileDao picFileDao;
 
     @Override
-    public String selectMyAd(String userId, Integer adType, Integer adSpec, Integer adStatus, Integer index, Integer pageSize) {
+    public String selectMyAd(String userId, Integer adType, Integer adSpec, Integer adStatus, Integer index, Integer pageSize,String key) {
         TUser user=new TUser();
         user.setUserId(userId);
         user=user.selectById();
@@ -58,7 +58,7 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
         if (3==user.getUserType()){
             userId=null;
         }
-        List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec, adStatus,isOnlyMy);
+        List<Map<String, Object>> myAds = advertisementDao.selectMyAd(new Page<MyAd>(index, pageSize), userId, adType, adSpec, adStatus,isOnlyMy,key);
         return ResultInfoUtils.infoData(myAds);
     }
 
