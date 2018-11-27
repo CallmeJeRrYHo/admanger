@@ -111,4 +111,22 @@
         group by u.user_id
         ) as aa
     </select>
+    <select id="selectPushCidByCompanyIds" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT
+        u.cid
+        FROM
+        t_user u
+        LEFT JOIN user_company uc ON u.user_id = uc.user_id
+        <where>
+            <if test="ids!=null">
+                uc.company_id IN
+                <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            and u.cid is not null
+        </where>
+        GROUP BY
+        u.user_id
+    </select>
 </mapper>

@@ -51,13 +51,13 @@ public class UserController extends MyBaseController {
     private UserCompanyDao userCompanyDao;
     @RequestMapping("/login")
     @ResponseBody
-    public String login(String account, String password) {
+    public String login(String account, String password,String cid) {
         try {
 
             checkNecessaryParameter("账号", account);
             checkNecessaryParameter("密码", password);
 
-            return itUserService.login(account, password);
+            return itUserService.login(account, password,cid);
         } catch (Exception e) {
             return handleError(e);
         }

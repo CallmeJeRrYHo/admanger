@@ -30,3 +30,8 @@ server:
 pic:
   UPLOAD_FILE_PATH: c:/ad/pic/
   UPLOAD_FILE_PATH_MAPPING: file:c:/ad/pic/
+gt:
+  appid: CZBjaWvqVp7MUsoBDomi34
+  appkey: 9ghDzvIFZy8qUmIPziVLXA
+  appsecret: oMaFOS0O7DAPVxYe1dIDXA
+  appmastersecret: Qy1hTSNKDX84L7jSHUSe41

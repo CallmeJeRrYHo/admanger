@@ -68,6 +68,9 @@ public class TUser extends Model<TUser> {
      */
 	@TableField("superior_id")
 	private String superiorUserId;
+
+	private String cid;
+
 	private Integer status;
 	@TableField("create_time")
 	private Date createTime;
@@ -78,6 +81,8 @@ public class TUser extends Model<TUser> {
 	private String superiorName;
 	@TableField(exist = false)
 	private String companyName;
+
+
 	public String getUserId() {
 		return userId;
 	}
@@ -186,6 +191,14 @@ public class TUser extends Model<TUser> {
 	@Override
 	protected Serializable pkVal() {
 		return this.userId;
+	}
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 }
 

@@ -39,7 +39,7 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
     UserCompanyDao userCompanyDao;
 
     @Override
-    public String login(String account, String password) {
+    public String login(String account, String password, String cid) {
         TUser tUser = new TUser();
         tUser = tUser.selectOne(new EntityWrapper().eq("mobile", account)
                 .eq("status", 1));
@@ -48,6 +48,10 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         }
         if (!password.equals(tUser.getPassword())) {
             throw new YqhException(BaseMessageEnum.LOGIN_FAILL);
+        }
+        if (EmptyUtils.isNotEmpty(cid)) {
+            tUser.setCid(cid);
+            tUser.updateById();
         }
         tUser.setPassword(null);
         tUser.setCompanyId(getUserCompanyIdsString(tUser.getUserId()));
@@ -58,7 +62,6 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
             stringBuilder.append(",");
         }
         tUser.setCompanyName(stringBuilder.substring(0, stringBuilder.length() - 1));
-
         return ResultInfoUtils.infoData(tUser);
     }
 
