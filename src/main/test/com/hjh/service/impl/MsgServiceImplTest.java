@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
  * @Descrption：
  * @Date： Create in 11:54 2018/11/27
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class MsgServiceImplTest {
 
