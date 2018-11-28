@@ -100,7 +100,7 @@ public class GexinUtil {
     /**
      * 批量用户发送
      */
-    public  boolean pushMessageToSingle(NotificationTemplate notificationTemplate, List<String> CIDs) {
+    public  boolean pushMessageToSingle(AbstractTemplate notificationTemplate, List<String> CIDs) {
         try {
             for(String cid : CIDs){
                 pushMessageToSingle(notificationTemplate, cid);

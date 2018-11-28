@@ -25,4 +25,6 @@ public interface TUserDao extends BaseMapper<TUser> {
 
 
     List<String > selectPushCidByCompanyIds(@Param("ids") List<String > ids);
+
+    List<String > selectPushBossCidByCompanyIds(@Param("ids") List<String > ids);
 }

@@ -2,8 +2,11 @@ package com.hjh.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gexin.rp.sdk.template.NotificationTemplate;
+import com.gexin.rp.sdk.template.TransmissionTemplate;
 import com.hjh.constant.Constant;
 import com.hjh.dao.PicFileDao;
+import com.hjh.dao.TUserDao;
 import com.hjh.entity.Advertisement;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.entity.MyAd;
@@ -11,10 +14,7 @@ import com.hjh.entity.PicFile;
 import com.hjh.entity.TUser;
 import com.hjh.service.IAdvertisementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.hjh.utils.EmptyUtils;
-import com.hjh.utils.ResultInfoUtils;
-import com.hjh.utils.YqhException;
-import com.hjh.utils.BaseMessageEnum;
+import com.hjh.utils.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,7 +43,10 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
     AdvertisementDao advertisementDao;
     @Autowired
     PicFileDao picFileDao;
-
+    @Autowired
+    TUserDao tUserDao;
+    @Autowired
+    GexinUtil gexinUtil;
     @Override
     public String selectMyAd(String userId, Integer adType, Integer adSpec, Integer adStatus, Integer index, Integer pageSize,String key) {
         TUser user=new TUser();
@@ -114,6 +118,13 @@ public class AdvertisementServiceImpl extends ServiceImpl<AdvertisementDao, Adve
             picFile.setBusnessId(id);
             picFile.insert();
         }
+        ArrayList<String> companys = new ArrayList<>();
+        companys.add(companyId);
+        List<String> cids = tUserDao.selectPushBossCidByCompanyIds(companys);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("operation","ad");
+        TransmissionTemplate transmissionTemplate = gexinUtil.transmissionTemplateDemo(jsonObject.toString());
+        gexinUtil.pushMessageToSingle(transmissionTemplate,cids);
         return ResultInfoUtils.infoData(id);
     }
 

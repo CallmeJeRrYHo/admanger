@@ -2,6 +2,7 @@ package com.hjh.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gexin.rp.sdk.template.NotificationTemplate;
+import com.gexin.rp.sdk.template.TransmissionTemplate;
 import com.hjh.constant.Constant;
 import com.hjh.dao.TUserDao;
 import com.hjh.entity.*;
@@ -65,8 +66,10 @@ public class MsgServiceImpl extends ServiceImpl<MsgDao, Msg> implements IMsgServ
         }
         List<String> strings = Arrays.asList(split);
         List<String> cids = tUserDao.selectPushCidByCompanyIds(strings);
-        NotificationTemplate te = gexinUtil.notificationTemplateDemo("您有新消息", content, "");
-        gexinUtil.pushMessageToSingle(te, cids);
+        JSONObject object = new JSONObject();
+        object.put("operation","msg");
+        TransmissionTemplate transmissionTemplate = gexinUtil.transmissionTemplateDemo(object.toString());
+        gexinUtil.pushMessageToSingle(transmissionTemplate,cids);
         if (EmptyUtils.isNotEmpty(pics)) {
             JSONArray jsonArray = JSONArray.fromObject(pics);
             for (int i = 0; i < jsonArray.size(); i++) {

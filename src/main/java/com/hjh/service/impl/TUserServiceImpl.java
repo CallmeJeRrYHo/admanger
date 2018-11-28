@@ -49,7 +49,7 @@ public class TUserServiceImpl extends ServiceImpl<TUserDao, TUser> implements IT
         if (!password.equals(tUser.getPassword())) {
             throw new YqhException(BaseMessageEnum.LOGIN_FAILL);
         }
-        if (EmptyUtils.isNotEmpty(cid)) {
+        if (EmptyUtils.isNotEmpty(cid) && !"null".equals(cid)) {
             tUser.setCid(cid);
             tUser.updateById();
         }
