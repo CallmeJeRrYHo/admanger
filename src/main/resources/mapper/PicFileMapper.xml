@@ -28,4 +28,8 @@
 	<select id="selectDesignPicForAd" resultType="Map">
 		SELECT * FROM pic_file WHERE busness_id=#{advertisement_id} and (type=2) and `status`=1;
 	</select>
+
+	<select id="selectPatrolRecordPic" resultType="Map">
+		SELECT * FROM pic_file WHERE busness_id=#{patrolRecordId} and (type=7) and `status`=1;
+	</select>
 </mapper>

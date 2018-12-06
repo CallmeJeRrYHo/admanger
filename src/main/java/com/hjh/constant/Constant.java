@@ -27,6 +27,9 @@ public interface Constant {
     Integer PIC_MSG_PIC=5;
     //报警处理图片
     Integer PIC_WARING_HANDLE_PIC = 6;
+
+    //巡查图片
+    Integer PIC_PATROL_RECORD_PIC = 7;
     //处理状态 待审核
     Integer HANDLE_STATUS_WAIT = 1;
     //已通过

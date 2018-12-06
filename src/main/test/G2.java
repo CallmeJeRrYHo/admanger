@@ -26,7 +26,7 @@ public class G2 {
     //要生成的表名
 //    private static String[] tables = {"t_order","attachment","order_append","partner","sys_authority","sys_file","sys_msg," +
 //            "sys_price_rule","sys_role","sys_role_auth","t_user","team","user_bank_card","user_flowlog","user_wallet","company"};
-    private static String[] tables = {"msg_read"};
+    private static String[] tables = {"patrol_record"};
     //table前缀
     private static String prefix = "t_";
 

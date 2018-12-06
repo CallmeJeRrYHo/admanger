@@ -22,4 +22,7 @@ public interface PicFileDao extends BaseMapper<PicFile> {
     List<Map<String ,Object>> selectLiveViewPicForAd (@Param("advertisement_id")String advertisement_id);
 
     List<Map<String ,Object>> selectDesignPicForAd(@Param("advertisement_id")String advertisement_id);
+
+    List<Map<String ,Object>> selectPatrolRecordPic(@Param("patrolRecordId")String patrolRecordId);
+
 }
