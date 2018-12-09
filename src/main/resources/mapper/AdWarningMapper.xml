@@ -14,6 +14,7 @@
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_time" property="modifyTime"/>
+        <result column="warning_no" property="warning_no"/>
     </resultMap>
     <resultMap id="WarningDetail" type="com.hjh.entity.AdWarningWithPic">
         <id column="warning_id" property="warningId"/>
@@ -30,6 +31,7 @@
         <result column="company_name" property="companyName"/>
         <result column="serial_num" property="serialNum"/>
         <result column="address" property="address"/>
+        <result column="warning_no" property="warning_no"/>
         <result column="create_user_name" property="createUserName"/>
         <collection property="picFiles" ofType="com.hjh.entity.PicFile">
             <id column="pic_id" property="picId"/>

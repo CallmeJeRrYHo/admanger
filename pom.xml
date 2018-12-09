@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hjh.</groupId>
     <artifactId>ad-manger</artifactId>
-    <version>1.0.25</version>
+    <version>1.0.26</version>
     <packaging>jar</packaging>
 
     <!-- Inherit defaults from Spring Boot -->

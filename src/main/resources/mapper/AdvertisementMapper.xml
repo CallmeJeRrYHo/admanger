@@ -71,9 +71,9 @@
         c.company_name,
         pf.path
         <if test="lon!=null">
-        ,round(6378.138*2*asin(sqrt(pow(sin(
-        (#{lat}*pi()/180-latitude*pi()/180)/2),2)+cos(#{lat}*pi()/180)*cos(latitude*pi()/180)*
-        pow(sin( (#{lon}*pi()/180-lontitude*pi()/180)/2),2)))*1000) AS juli
+            ,round(6378.138*2*asin(sqrt(pow(sin(
+            (#{lat}*pi()/180-latitude*pi()/180)/2),2)+cos(#{lat}*pi()/180)*cos(latitude*pi()/180)*
+            pow(sin( (#{lon}*pi()/180-lontitude*pi()/180)/2),2)))*1000) AS juli
         </if>
         FROM
         advertisement ad
@@ -83,7 +83,6 @@
         <where>
             ad.`status` = 1
             and c.`status`=1
-
             AND ad.ad_status =5
             <if test="adSpec != null">
                 AND ad.ad_spec=#{adSpec}
@@ -96,8 +95,32 @@
             </if>
             <if test="keyWord != null and keyWord != ''">
                 AND (c.company_name like CONCAT("%",#{keyWord},"%")
-                    or ad.address like CONCAT("%",#{keyWord},"%")
-                    or ad.serial_num like CONCAT("%",#{keyWord},"%"))
+                or ad.address like CONCAT("%",#{keyWord},"%")
+                or ad.serial_num like CONCAT("%",#{keyWord},"%"))
+            </if>
+            <if test="isPatrol==1">
+                AND (
+                SELECT
+                COUNT(*)
+                FROM
+                patrol_record pr
+                WHERE
+                ad.advertisement_id = pr.advertisement_id
+                AND pr.`status` = 1
+                AND DATE_FORMAT( pr.create_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+                ) &gt; 0
+            </if>
+            <if test="isPatrol==2">
+                AND (
+                SELECT
+                COUNT(*)
+                FROM
+                patrol_record pr
+                WHERE
+                ad.advertisement_id = pr.advertisement_id
+                AND pr.`status` = 1
+                AND DATE_FORMAT(pr.create_time, "%Y%M") = DATE_FORMAT(CURRENT_DATE, "%Y%M")
+                ) = 0
             </if>
         </where>
         group by ad.advertisement_id
@@ -152,7 +175,7 @@
             and c.`status`=1
             <if test="key!=null and key != ''">
                 and (ad.address like concat('%',#{key},'%')
-                    or ad.serial_num like concat('%',#{key},'%'))
+                or ad.serial_num like concat('%',#{key},'%'))
             </if>
             <if test="adSpec != null">
                 AND ad.ad_spec=#{adSpec}
@@ -199,5 +222,48 @@
         <if test="type !=1">
             ad_spec
         </if>
+    </select>
+
+    <select id="newAdStatistics" resultType="Map">
+        SELECT
+        ( SELECT COUNT( * ) FROM advertisement
+        <where>
+            <if test="companyId!=null and companyId!=''">
+                company_id = #{companyId}
+            </if>
+        </where>
+        ) AS total_num,
+        ( SELECT COUNT( * ) FROM advertisement
+        <where>
+            DATE_FORMAT( modify_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+            <if test="companyId!=null and companyId!=''">
+                and company_id = #{companyId}
+            </if>
+
+        </where>
+        ) AS month_update_num,
+        (
+            SELECT
+            COUNT( * )
+            FROM
+            (
+                SELECT
+                COUNT( * )
+                FROM
+                patrol_record pr
+                LEFT JOIN advertisement ad ON ad.advertisement_id = pr.advertisement_id
+                <where>
+                    pr.`status` = 1
+                    AND DATE_FORMAT( pr.create_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+
+                    <if test="companyId!=null and companyId!=''">
+                        and ad.company_id = #{companyId}
+                    </if>
+
+                </where>
+                GROUP BY
+                pr.advertisement_id
+            ) AS aa
+        ) AS month_patrol_num
     </select>
 </mapper>

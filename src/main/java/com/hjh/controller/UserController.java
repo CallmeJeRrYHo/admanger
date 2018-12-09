@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -284,6 +285,21 @@ public class UserController extends MyBaseController {
             checkNecessaryParameter("userId",userId);
 
             return iCompanyService.selectMyCompany(index,pageSize,userId,companyId,keyWord);
+        }catch(Exception e){
+            return handleError(e);
+        }
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test(String companyId){
+        try{
+
+            List<String> ids=new ArrayList<>();
+            ids.add(companyId);
+            List<String> aa = tUserDao.selectPushBossCidByCompanyIds(ids);
+            System.out.println(aa.toString());
+            return ResultInfoUtils.infoData(aa);
         }catch(Exception e){
             return handleError(e);
         }

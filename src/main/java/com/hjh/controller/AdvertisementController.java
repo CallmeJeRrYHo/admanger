@@ -39,10 +39,10 @@ public class AdvertisementController extends BaseController {
     PicFileDao picFileDao;
     @ResponseBody
     @RequestMapping("/selectAdList")
-    public String selectAdList(String companyId, Integer adType, Integer adSpec, String keyWord, @RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize,Double lon,Double lat){
+    public String selectAdList(String companyId, Integer adType, Integer adSpec,Integer isPatrol, String keyWord, @RequestParam(defaultValue = "1")Integer index,@RequestParam(defaultValue = "10")Integer pageSize,Double lon,Double lat){
         try{
             // TODO: 2018/9/12 dao层添加index
-            List<Map<String, Object>> maps = advertisementDao.selectAdList(new Page<Map<String, Object>>(index,pageSize),companyId, adType, adSpec, keyWord, lon,lat);
+            List<Map<String, Object>> maps = advertisementDao.selectAdList(new Page<Map<String, Object>>(index,pageSize),companyId, adType, adSpec, keyWord, lon,lat,isPatrol);
             return ResultInfoUtils.infoData(maps);
         }catch(Exception e){
             return handleError(e);

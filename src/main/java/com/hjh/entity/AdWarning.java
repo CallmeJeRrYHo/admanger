@@ -63,7 +63,7 @@ public class AdWarning extends Model<AdWarning> {
 	private Date createTime;
 	@TableField("modify_time")
 	private Date modifyTime;
-
+	private Integer warning_no;
 	@TableField("handle_user_id")
 	private String handleUserId;
 	@Override

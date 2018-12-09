@@ -19,11 +19,13 @@ import java.util.Map;
  */
 public interface AdvertisementDao extends BaseMapper<Advertisement> {
 
-    List<Map<String,Object>> selectAdList(Page<Map<String,Object>>page,@Param("companyId") String companyId, @Param("adType") Integer adType, @Param("adSpec") Integer adSpec, @Param("keyWord") String keyWord,  @Param("lon")Double lon,@Param("lat") Double lat);
+    List<Map<String,Object>> selectAdList(Page<Map<String,Object>>page,@Param("companyId") String companyId, @Param("adType") Integer adType, @Param("adSpec") Integer adSpec, @Param("keyWord") String keyWord,  @Param("lon")Double lon,@Param("lat") Double lat,@Param("isPatrol")Integer isPatrol);
 
     List<Map<String,Object>> getAdDetail(@Param("advertisementId")String advertisementId);
 
     List<Map<String ,Object>> selectMyAd(Page<MyAd> var1, @Param("userId") String userId, @Param("adType") Integer adType, @Param("adSpec") Integer adSpec, @Param("adStatus") Integer adStatus, @Param("isOnlyMy")String isOnlyMy,@Param("key")String key);
 
     List<Map<String ,Object>> adStatistics(@Param("companyId") String companyId, @Param("type")Integer type);
+
+    Map<String,Object> newAdStatistics(@Param("companyId")String companyId);
 }

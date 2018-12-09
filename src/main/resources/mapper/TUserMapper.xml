@@ -118,6 +118,7 @@
         t_user u
         LEFT JOIN user_company uc ON u.user_id = uc.user_id
         <where>
+            (
             <if test="ids!=null">
                 uc.company_id IN
                 <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
@@ -125,6 +126,8 @@
                 </foreach>
             </if>
             and u.cid is not null
+            )
+            or u.user_type=3
         </where>
         GROUP BY
         u.user_id
@@ -137,6 +140,7 @@
         t_user u
         LEFT JOIN user_company uc ON u.user_id = uc.user_id
         <where>
+            (
             <if test="ids!=null">
                 uc.company_id IN
                 <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
@@ -145,6 +149,8 @@
             </if>
             and u.cid is not null
             and u.user_type=2
+            )
+            or u.user_type=3
         </where>
         GROUP BY
         u.user_id
