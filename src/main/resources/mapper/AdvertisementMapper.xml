@@ -244,7 +244,7 @@
                     and modify_time &gt;= #{startDate}
 
                 </when>
-                <when test="endDate!=null and endDate!=null and (startDate!=null or startDate!='' )">
+                <when test="endDate!=null and endDate!='' and (startDate!=null or startDate!='' )">
                     and modify_time &lt;= #{endDate}
                 </when>
                 <otherwise>
