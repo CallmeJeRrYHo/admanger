@@ -27,5 +27,5 @@ public interface AdvertisementDao extends BaseMapper<Advertisement> {
 
     List<Map<String ,Object>> adStatistics(@Param("companyId") String companyId, @Param("type")Integer type);
 
-    Map<String,Object> newAdStatistics(@Param("companyId")String companyId);
+    Map<String,Object> newAdStatistics(@Param("companyId")String companyId,@Param("startDate")String startDate,@Param("endDate")String endDate);
 }

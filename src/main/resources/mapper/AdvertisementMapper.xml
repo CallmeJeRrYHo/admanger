@@ -235,35 +235,66 @@
         ) AS total_num,
         ( SELECT COUNT( * ) FROM advertisement
         <where>
-            DATE_FORMAT( modify_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+            <choose>
+                <when test="startDate!=null and endDate!=null and endDate!='' and startDate!=''">
+                    and modify_time &gt;= #{startDate}
+                    and modify_time &lt;= #{endDate}
+                </when>
+                <when test="startDate!=null and startDate!='' and (endDate!=null or endDate!='' )">
+                    and modify_time &gt;= #{startDate}
+
+                </when>
+                <when test="endDate!=null and endDate!=null and (startDate!=null or startDate!='' )">
+                    and modify_time &lt;= #{endDate}
+                </when>
+                <otherwise>
+                    AND DATE_FORMAT( modify_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+                </otherwise>
+            </choose>
+
             <if test="companyId!=null and companyId!=''">
                 and company_id = #{companyId}
             </if>
-
+            and status=1
         </where>
         ) AS month_update_num,
         (
-            SELECT
-            COUNT( * )
-            FROM
-            (
-                SELECT
-                COUNT( * )
-                FROM
-                patrol_record pr
-                LEFT JOIN advertisement ad ON ad.advertisement_id = pr.advertisement_id
-                <where>
-                    pr.`status` = 1
+        SELECT
+        COUNT( * )
+        FROM
+        (
+        SELECT
+        COUNT( * )
+        FROM
+        patrol_record pr
+        LEFT JOIN advertisement ad ON ad.advertisement_id = pr.advertisement_id
+        <where>
+            pr.`status` = 1
+            <choose>
+                <when test="startDate!=null and endDate!=null and endDate!='' and startDate!=''">
+                    and pr.create_time &gt;= #{startDate}
+                    and pr.create_time &lt;= #{endDate}
+                </when>
+                <when test="startDate!=null and startDate!='' and (endDate!=null or endDate!='' )">
+                    and pr.create_time &gt;= #{startDate}
+
+                </when>
+                <when test="endDate!=null and endDate!=null and (startDate!=null or startDate!='' )">
+                    and pr.create_time &lt;= #{endDate}
+                </when>
+                <otherwise>
                     AND DATE_FORMAT( pr.create_time, "%Y%M" ) = DATE_FORMAT( CURRENT_DATE, "%Y%M" )
+                </otherwise>
+            </choose>
 
-                    <if test="companyId!=null and companyId!=''">
-                        and ad.company_id = #{companyId}
-                    </if>
-
-                </where>
-                GROUP BY
-                pr.advertisement_id
-            ) AS aa
+            <if test="companyId!=null and companyId!=''">
+                and ad.company_id = #{companyId}
+            </if>
+            and ad.status=1
+        </where>
+        GROUP BY
+        pr.advertisement_id
+        ) AS aa
         ) AS month_patrol_num
     </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.hjh.controller;
 import com.hjh.dao.AdvertisementDao;
 import com.hjh.service.IAdvertisementService;
 import com.hjh.utils.BaseController;
+import com.hjh.utils.EmptyUtils;
 import com.hjh.utils.ResultInfoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,13 @@ public class StatisticsController extends BaseController {
     @RequestMapping("/newStatistics")
     public String newStatistics(String companyId, String startDate, String endDate){
         try{
-            return ResultInfoUtils.infoData(advertisementDao.newAdStatistics(companyId));
+            if (EmptyUtils.isNotEmpty(endDate)){
+                endDate+=" 23:59:59";
+            }
+            if (EmptyUtils.isNotEmpty(startDate)){
+                startDate+=" 00:00:00";
+            }
+            return ResultInfoUtils.infoData(advertisementDao.newAdStatistics(companyId,startDate,endDate));
         }catch(Exception e){
             return handleError(e);
         }

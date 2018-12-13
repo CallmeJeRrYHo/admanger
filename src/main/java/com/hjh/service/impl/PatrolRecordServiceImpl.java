@@ -6,8 +6,10 @@ import com.hjh.dao.PatrolRecordDao;
 import com.hjh.entity.PicFile;
 import com.hjh.service.IPatrolRecordService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.hjh.utils.BaseMessageEnum;
 import com.hjh.utils.EmptyUtils;
 import com.hjh.utils.ResultInfoUtils;
+import com.hjh.utils.YqhException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,12 @@ public class PatrolRecordServiceImpl extends ServiceImpl<PatrolRecordDao, Patrol
     @Override
     @Transactional
     public String add(String userId, Integer hasProblem, Integer isWarning, String warningNo, String pics, String advertisementId) {
+        if (hasProblem==1&&isWarning!=1){
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"有问题必须要有报警");
+        }
+        if (isWarning==1&&EmptyUtils.isEmpty(warningNo)){
+            throw new YqhException(BaseMessageEnum.UNKNOW_ERROR,"请填写报警号");
+        }
         String id = UUID.randomUUID().toString();
         PatrolRecord patrolRecord=new PatrolRecord();
         patrolRecord.setPatrolRecordId(id);
