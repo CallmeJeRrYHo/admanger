@@ -112,14 +112,14 @@ public class AdvertisementController extends BaseController {
     public String addAdvertisement(String userId,String companyId,String serialNum,Double lontitude,Double latitude,Integer adType,Integer adSpec,Integer hasLeaderPortrait,String adContent,String designPic,String address,String nearCamera,String nearPolice,String monitorUserId){
         try{
             checkNecessaryParameter("userId",userId);
-            checkNecessaryParameter("公司",companyId);
+            checkNecessaryParameter("单位",companyId);
             checkNecessaryParameter("序号",serialNum);
             checkNecessaryParameter("经度",lontitude);
             checkNecessaryParameter("纬度",latitude);
-            checkNecessaryParameter("广告类型",adType);
-            checkNecessaryParameter("广告序号",adSpec);
-            checkNecessaryParameter("序号",hasLeaderPortrait);
-            checkNecessaryParameter("广告内容",adContent);
+            checkNecessaryParameter("宣传牌类型",adType);
+            checkNecessaryParameter("设置规格",adSpec);
+            checkNecessaryParameter("是否有领导人头像",hasLeaderPortrait);
+            checkNecessaryParameter("宣传位内容",adContent);
             checkNecessaryParameter("图片",designPic);
             checkNecessaryParameter("负责人",monitorUserId);
             return iAdvertisementService.addAdvertisement(userId,companyId,serialNum,lontitude,latitude,adType,adSpec,hasLeaderPortrait,adContent,designPic,address,nearCamera,nearPolice,monitorUserId);

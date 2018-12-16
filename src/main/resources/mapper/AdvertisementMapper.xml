@@ -69,7 +69,7 @@
         ad.ad_content,
         u.`name`,
         c.company_name,
-        pf.path
+        IFNULL(pf.path,"/pic/5bb83c01e19d4ddc98eaa4e56e6bef5e.png") as path
         <if test="lon!=null">
             ,round(6378.138*2*asin(sqrt(pow(sin(
             (#{lat}*pi()/180-latitude*pi()/180)/2),2)+cos(#{lat}*pi()/180)*cos(latitude*pi()/180)*
@@ -162,14 +162,14 @@
         ad.ad_status,
         u.`name`,
         c.company_name,
-        pf.path,
+        IFNULL(pf.path,"/pic/5bb83c01e19d4ddc98eaa4e56e6bef5e.png") as path,
         pf.type
         FROM
         advertisement ad
         LEFT JOIN company c ON ad.company_id = c.company_id
         left JOIN user_company uc on uc.company_id=c.company_id
         LEFT JOIN t_user u ON u.user_id = ad.monitor_user_id
-        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id AND pf.type=2 AND pf.`status`=1)
+        left JOIN pic_file pf on (pf.busness_id=ad.advertisement_id and pf.type=3 and is_first=1 AND pf.`status`=1)
         <where>
             ad.`status` = 1
             and c.`status`=1
